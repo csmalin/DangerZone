@@ -1,8 +1,6 @@
 class CrimesController < ApplicationController
-  def index
-   
+  def show 
     @crimes = Crime.all
-
   end
 
   def update
