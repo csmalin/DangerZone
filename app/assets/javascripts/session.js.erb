@@ -1,0 +1,17 @@
+navigator.geolocation.getCurrentPosition(geoLocation)
+
+function geoLocation(position) {
+  var lat = position.coords.latitude,
+      lon = position.coords.longitude;
+  var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv').setView([lat, lon], 20);
+
+  L.marker([lat,lon], {
+      icon: L.icon({
+          iconUrl: "http://i.imgur.com/FOqzufV.png",
+          iconSize:     [35, 35], 
+          iconAnchor:   [25, 25], 
+          popupAnchor:  [0, -25]  
+      })
+  }).addTo(map);
+
+}
