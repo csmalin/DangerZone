@@ -1,8 +1,8 @@
 class CrimesController < ApplicationController
-  def index
-   
-    @crimes = Crime.all
+  include ApplicationHelper
 
+  def index
+    @crimes = Crime.all
   end
 
   def update
@@ -10,13 +10,12 @@ class CrimesController < ApplicationController
     crimes = client.get("tmnf-yvry")
 
     crimes.each do |crime|
-      crime.date = DateTime.strptime(crime.date.to_s, '%s')
       Crime.create(:incidntnum => crime.incidntnum,
                   :category   => crime.category,
                   :descript   => crime.descript,
-                  :dayofweek  => crime.dayofweek,
-                  :date       => crime.date,
-                  :time       => crime.time,
+                  :dayofweek  => crime.dayofweek,            
+                  :date       => DateTime.strptime(crime.date.to_s,"%s").to_date,
+                  :time       => mins_since_midnight(crime.time),
                   :pddistrict => crime.pddistrict,
                   :resolution => crime.resolution,
                   :address    => crime.address,
