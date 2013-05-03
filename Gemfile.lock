@@ -40,7 +40,11 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+<<<<<<< HEAD
     geocoder (1.1.8)
+=======
+    geocoder (1.1.6)
+>>>>>>> formatted date and time, geocode integration
     hashie (2.0.3)
     hike (1.2.2)
     i18n (0.6.4)
