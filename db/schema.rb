@@ -11,6 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20130502221303) do
+
+  create_table "crimes", :force => true do |t|
+    t.integer  "incidntnum"
+    t.string   "category"
+    t.string   "descript"
+    t.string   "dayofweek"
+    t.datetime "date"
+    t.time     "time"
+    t.string   "pddistrict"
+    t.string   "resolution"
+    t.string   "address"
+    t.decimal  "latitude",   :precision => 17, :scale => 13
+    t.decimal  "longitude",  :precision => 17, :scale => 13
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
 
 end
