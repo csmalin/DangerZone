@@ -10,8 +10,8 @@ class CreateCrimes < ActiveRecord::Migration
       t.string :pddistrict
       t.string :resolution
       t.string :address
-      t.decimal :lat, :precision => 17, :scale => 13
-      t.decimal :lon, :precision => 17, :scale => 13
+      t.decimal :latitude, :precision => 17, :scale => 13
+      t.decimal :longitude, :precision => 17, :scale => 13
 
       t.timestamps
     end
