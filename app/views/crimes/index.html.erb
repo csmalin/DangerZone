@@ -1,0 +1,33 @@
+<h1>Crimes</h1>
+
+<table border="1">
+  <tr>
+    <th>Incident Num</th>
+    <th>Category</th>
+    <th>Description</th>
+    <th>Day</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>District</th>
+    <th>Address</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+  </tr>
+
+  <% @crimes.each do |crime| %>
+    <tr>
+      <td><%= crime.incidntnum %></td> 
+      <td><%= crime.category %></td>
+      <td><%= crime.descript %></td>
+      <td><%= crime.dayofweek %></td>
+      <td><%= crime.date %></td>
+      <td><%= crime.time %></td>
+      <td><%= crime.pddistrict %></td>
+      <td><%= crime.address %></td>
+      <td><%= crime.latitude %></td>
+      <td><%= crime.longitude %></td>
+
+    </tr>
+  <% end %>
+
+</table>

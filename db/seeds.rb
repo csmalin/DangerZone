@@ -1,7 +1,13 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+require 'soda/client'
+
+client = SODA::Client.new({:domain => "data.sfgov.org"})
+crimes = client.get("tmnf-yvry")
+
+crimes.each do |crime|
+  puts "Category: " + crime.category
+  puts "Address: " + crime.address
+  puts "Date: " + crime.date.to_s
+  puts "Day Of Week: " + crime.dayofweek
+  crime.descript
+  
+end

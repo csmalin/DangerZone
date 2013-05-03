@@ -1,4 +1,8 @@
 Dangerzone::Application.routes.draw do
+  
+  resources :crimes 
+  match 'update' => 'crimes#update'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
