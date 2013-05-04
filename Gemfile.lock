@@ -50,6 +50,7 @@ GEM
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     geocoder (1.1.8)
 =======
     geocoder (1.1.6)
@@ -61,11 +62,19 @@ GEM
 =======
     geocoder (1.1.8)
 <<<<<<< HEAD
+=======
+>>>>>>> Rendering the crime data points on the map
     hashie (2.0.4)
 <<<<<<< HEAD
 >>>>>>> added search functionality
 =======
 =======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+=======
+>>>>>>> Rendering the crime data points on the map
+>>>>>>> Rendering the crime data points on the map
     hashie (2.0.3)
 >>>>>>> Merge all of the things!!!
 >>>>>>> Merge all of the things!!!
@@ -141,10 +150,22 @@ PLATFORMS
 
 DEPENDENCIES
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> Rendering the crime data points on the map
   better_errors
   binding_of_caller
 =======
 >>>>>>> Merge all of the things!!!
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> master
+=======
+>>>>>>> Rendering the crime data points on the map
+>>>>>>> Rendering the crime data points on the map
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails

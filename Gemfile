@@ -27,13 +27,21 @@ gem 'jquery-rails'
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Rendering the crime data points on the map
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
 end
+<<<<<<< HEAD
 >>>>>>> added search functionality
+=======
+=======
+>>>>>>> Rendering the crime data points on the map
+>>>>>>> Rendering the crime data points on the map
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

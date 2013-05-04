@@ -1,4 +1,5 @@
 class CrimesController < ApplicationController
+
 include ApplicationHelper
 
 
@@ -10,9 +11,23 @@ include ApplicationHelper
     format.json { render :json => @crimes }
     end
 
+
+  def search
+  end
+
+
   def results 
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
       render 'index'
+  end
+
+  def index 
+    @crimes = Crime.all
+    @crimes.map!{|crime| crime.to_json}
+    @crimes.map!{|crime| JSON.parse(crime)}
+    respond_to do |format|
+    format.json { render :json => @crimes }
+    end
   end
 
 

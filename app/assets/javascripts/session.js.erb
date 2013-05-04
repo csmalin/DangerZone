@@ -1,10 +1,9 @@
-  navigator.geolocation.getCurrentPosition(geoLocation)
+navigator.geolocation.getCurrentPosition(geoLocation)
 
   function geoLocation(position) {
     var lat = position.coords.latitude,
     lon = position.coords.longitude;
     var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv').setView([lat, lon], 20);
-
 
     L.marker([lat,lon], {
       icon: L.icon({
