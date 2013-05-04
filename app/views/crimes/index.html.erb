@@ -1,0 +1,41 @@
+<h1>Crimes</h1>
+
+<table border="1">
+  <tr>
+    <th>Incident Num</th>
+    <th>Category</th>
+    <th>Description</th>
+    <th>Day</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>District</th>
+    <th>Address</th>
+    <th>Distance Away</th>
+    <th>Direction</th>
+  </tr>
+  <% @address = Geocoder.search("#{params[:address]}, San Francisco, CA") %>
+  <% @crimes.each do |crime| %>
+    <tr>
+      <td><%= crime.incidntnum %></td> 
+      <td><%= crime.category %></td>
+      <td><%= crime.descript %></td>
+      <td><%= crime.dayofweek %></td>
+      <td><%= crime.date %></td>
+      <td><%= crime.time %></td>
+      <td><%= crime.pddistrict %></td>
+      <td><%= crime.address %></td>
+
+      <% distance = (Geocoder::Calculations.distance_between(@address.first.coordinates, crime)*5280) %>
+      <% unless distance.nan? %>
+      <td><%= distance.floor %></td>
+      <% end %>
+
+      <% bearing = crime.bearing_to(@address.first.coordinates) %>
+      <% unless bearing.nan? %>
+      <td><%= Geocoder::Calculations.compass_point(bearing) %></td>
+      <% end %>
+
+    </tr>
+  <% end %>
+
+</table>

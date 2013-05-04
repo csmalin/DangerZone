@@ -1,6 +1,7 @@
 class CrimesController < ApplicationController
 include ApplicationHelper
 
+
   def index 
     @crimes = Crime.all
     @crimes.map!{|crime| crime.to_json}
@@ -8,6 +9,13 @@ include ApplicationHelper
     respond_to do |format|
     format.json { render :json => @crimes }
     end
+
+  def results 
+     @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
+      render 'index'
+  end
+
+
 
   def update
     client = SODA::Client.new({:domain => "data.sfgov.org"})
