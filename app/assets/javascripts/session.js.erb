@@ -5,6 +5,7 @@
     lon = position.coords.longitude;
     var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv').setView([lat, lon], 20);
 
+
     L.marker([lat,lon], {
       icon: L.icon({
         iconUrl: "http://i.imgur.com/FOqzufV.png",
@@ -13,6 +14,7 @@
         popupAnchor:  [0, -25]  
       })
     }).addTo(map);
+
 
     $.getJSON('http://localhost:3000/crimes', function(data) { 
 

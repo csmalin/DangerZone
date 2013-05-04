@@ -60,8 +60,15 @@ GEM
     hashie (2.0.3)
 =======
     geocoder (1.1.8)
+<<<<<<< HEAD
     hashie (2.0.4)
+<<<<<<< HEAD
 >>>>>>> added search functionality
+=======
+=======
+    hashie (2.0.3)
+>>>>>>> Merge all of the things!!!
+>>>>>>> Merge all of the things!!!
     hike (1.2.2)
     i18n (0.6.4)
     journey (1.0.4)
