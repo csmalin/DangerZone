@@ -49,8 +49,11 @@ GEM
       multi_json (~> 1.0)
     geocoder (1.1.8)
 <<<<<<< HEAD
+<<<<<<< HEAD
     hashie (2.0.4)
 =======
+=======
+>>>>>>> master
     hashie (2.0.3)
 >>>>>>> Merge all of the things!!!
     hike (1.2.2)
@@ -125,10 +128,13 @@ PLATFORMS
 
 DEPENDENCIES
 <<<<<<< HEAD
+<<<<<<< HEAD
   better_errors
   binding_of_caller
 =======
 >>>>>>> Merge all of the things!!!
+=======
+>>>>>>> master
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails

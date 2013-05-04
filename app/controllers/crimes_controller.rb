@@ -1,4 +1,5 @@
 class CrimesController < ApplicationController
+
   include ApplicationHelper
 
   def index
@@ -11,6 +12,9 @@ class CrimesController < ApplicationController
   def results 
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
       render 'index'
+
+  def show 
+    @crimes = Crime.all
   end
 
 
