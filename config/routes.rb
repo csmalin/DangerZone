@@ -1,4 +1,5 @@
 Dangerzone::Application.routes.draw do
+<<<<<<< HEAD
 
   root to: "session#index"
 
@@ -11,4 +12,13 @@ Dangerzone::Application.routes.draw do
 
   match 'results' => 'crimes#results'
   
+=======
+ 
+  resources :crimes 
+  match 'update' => 'crimes#update'
+  match 'search' => 'crimes#search'
+  match 'results' => 'crimes#results'
+  root to: "session#index"
+
+>>>>>>> master
 end

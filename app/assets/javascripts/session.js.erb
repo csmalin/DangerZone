@@ -5,6 +5,7 @@ navigator.geolocation.getCurrentPosition(geoLocation)
     lon = position.coords.longitude;
     var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv').setView([lat, lon], 20);
 
+
     L.marker([lat,lon], {
       icon: L.icon({
         iconUrl: "http://i.imgur.com/FOqzufV.png",
@@ -12,8 +13,7 @@ navigator.geolocation.getCurrentPosition(geoLocation)
         iconAnchor:   [25, 25], 
         popupAnchor:  [0, -25]  
       })
-    }).addTo(map);
-
+    }).addTo(map);  
 
     $.getJSON('http://localhost:3000/crimes', function(data) { 
 
