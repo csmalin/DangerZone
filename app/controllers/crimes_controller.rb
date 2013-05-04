@@ -2,8 +2,18 @@ class CrimesController < ApplicationController
   include ApplicationHelper
 
   def index
-    @crimes = Crime.all
+    @crimes 
   end
+
+  def search
+  end
+
+  def results 
+     @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
+      render 'index'
+  end
+
+
 
   def update
     client = SODA::Client.new({:domain => "data.sfgov.org"})
