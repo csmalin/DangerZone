@@ -1,10 +1,6 @@
 class CrimesController < ApplicationController
 
-  include ApplicationHelper
-
-  def index
-    @crimes 
-  end
+include ApplicationHelper
 
   def search
   end
@@ -12,12 +8,29 @@ class CrimesController < ApplicationController
   def results 
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
       render 'index'
+  end
 
   def show 
     @crimes = Crime.all
+    @crimes.map!{|crime| crime.to_json}
+    @crimes.map!{|crime| JSON.parse(crime)}
+    respond_to do |format|
+    format.json { render :json => @crimes }
+    end
+
+  def results 
+     @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
+      render 'index'
   end
 
-
+  def index 
+    @crimes = Crime.all
+    @crimes.map!{|crime| crime.to_json}
+    @crimes.map!{|crime| JSON.parse(crime)}
+    respond_to do |format|
+    format.json { render :json => @crimes }
+    end
+  end
 
   def update
     client = SODA::Client.new({:domain => "data.sfgov.org"})
@@ -36,6 +49,5 @@ class CrimesController < ApplicationController
                   :latitude   => crime.location.latitude,
                   :longitude  => crime.location.longitude)
      end
-     redirect_to '/crimes'
   end
 end
