@@ -1,6 +1,11 @@
 class CrimesController < ApplicationController
-  def show 
+  def index 
     @crimes = Crime.all
+    @crimes.map!{|crime| crime.to_json}
+    @crimes.map!{|crime| JSON.parse(crime)}
+    respond_to do |format|
+    format.json { render :json => @crimes }
+    end
   end
 
   def update
@@ -21,6 +26,5 @@ class CrimesController < ApplicationController
                   :latitude   => crime.location.latitude,
                   :longitude  => crime.location.longitude)
      end
-     redirect_to '/crimes'
   end
 end
