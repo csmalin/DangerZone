@@ -49,10 +49,14 @@ GEM
       multi_json (~> 1.0)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     geocoder (1.1.8)
 =======
     geocoder (1.1.6)
 >>>>>>> formatted date and time, geocode integration
+=======
+    geocoder (1.1.8)
+>>>>>>> Merge all of the things!!!
     hashie (2.0.3)
 =======
     geocoder (1.1.8)
@@ -129,8 +133,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+<<<<<<< HEAD
   better_errors
   binding_of_caller
+=======
+>>>>>>> Merge all of the things!!!
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails
