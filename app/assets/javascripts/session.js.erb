@@ -1,17 +1,92 @@
-navigator.geolocation.getCurrentPosition(geoLocation)
+var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv');
 
-function geoLocation(position) {
-  var lat = position.coords.latitude,
-      lon = position.coords.longitude;
-  var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv').setView([lat, lon], 20);
+$(document).ready(function(){
+  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 4000);
+  map.searchLocationFormInit();
+});
+
+map.searchLocationFormInit = function(){
+  $('div.search img').click(function(){
+    $('div.search').toggleClass('open');
+  });
+
+  $('form.location-search').on('submit', function(event){
+    event.preventDefault();
+    var data = $(this).serialize();
+
+    $.post(console.log(data), '/location', function(loc){
+      map.setView([loc['lat'], loc['lon']], 18);
+    }, function(error){
+      map.alertFlash(error.message);
+    });
+
+  });
+}
+
+map.flash = function(message, type){
+  $('.flash').addClass(type).text(message);
+  window.setTimeout(function(){
+    $('.flash').removeClass(type);
+  }, 4000);
+}
+map.formOpen = function(){
+  $('div.search').addClass('open');
+}
+map.formClose = function(){
+  $('div.search').removeClass('open');
+}
+map.timeoutCallback = function(){
+  map.formOpen();
+  map.flash("Enter your location!", "warning");
+}
+map.showPosition = function(pos) {
+  var lat = pos.coords.latitude,
+      lon = pos.coords.longitude;
+
+      map.setView([lat, lon], 18);
 
   L.marker([lat,lon], {
       icon: L.icon({
           iconUrl: "http://i.imgur.com/FOqzufV.png",
-          iconSize:     [35, 35], 
-          iconAnchor:   [25, 25], 
-          popupAnchor:  [0, -25]  
+          iconSize:     [35, 35],
+          iconAnchor:   [25, 25],
+          popupAnchor:  [0, -25]
       })
   }).addTo(map);
-
+  map.flash("Location Captured!", 'success');
 }
+map.errorCallback = function(error){
+  if(error.PERMISSION_DENIED){
+    map.flash("Enable your Geo Location!", "warning");
+  } else if(error.POSITION_UNAVAILABLE){
+    map.flash("Enter a location!", "warning");
+  } else if(error.TIMEOUT){
+    map.flash("hmmm we timed out trying to find where you are hiding!", "warning");
+  }
+}
+navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, timeoutCB, timeoutThreshold){
+  var successHandler = successCB;
+  var errorHandler = errorCB;
+
+  window.geolocationTimeoutHandler = function(){
+    timeoutCB();
+  }
+
+  if (typeof(geolocationRequestTimeoutHandler) != 'undefined'){
+    clearTimeout(window['geolocationRequestTimeoutHandler']);//clear any previous timers
+  }
+
+  var timeout = timeoutThreshold || 40000;//60 seconds
+  window['geolocationRequestTimeoutHandler'] = setTimeout('geolocationTimeoutHandler()', timeout);//set timeout handler
+
+  navigator.geolocation.getCurrentPosition(
+    function(position){
+      clearTimeout(window['geolocationRequestTimeoutHandler']);
+      successHandler(position);
+    },
+    function(error){
+      clearTimeout(window['geolocationRequestTimeoutHandler']);
+      errorHandler(error);
+    }
+  );
+};
