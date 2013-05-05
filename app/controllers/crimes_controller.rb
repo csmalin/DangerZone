@@ -17,6 +17,7 @@ include ApplicationHelper
     respond_to do |format|
     format.json { render :json => @crimes }
     end
+  end
 
   def results 
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
