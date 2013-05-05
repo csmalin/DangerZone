@@ -2,8 +2,8 @@ Dangerzone::Application.routes.draw do
 
 
   root to: "session#index"
-
-  resources :crimes 
+  resources :geocoder
+  resources :crimes
   match 'update' => 'crimes#update'
 
   match 'all'   => 'crimes#show'

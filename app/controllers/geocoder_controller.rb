@@ -1,0 +1,13 @@
+class GeocoderController < ApplicationController
+include ApplicationHelper
+
+	def index
+		#need to add logic to see if location entered is not San Francisco or we don't have enough information from the form.
+  	geocoded = Geocoder.search("params[:location], San Francisco, CA")[0]
+  	@location_coords = geocoded.data["geometry"]["location"]
+  	respond_to do |format|
+  		format.json { render :json => @location_coords }
+  	end
+  end
+
+end

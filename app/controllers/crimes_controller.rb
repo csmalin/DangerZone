@@ -5,12 +5,12 @@ include ApplicationHelper
   def search
   end
 
-  def results 
+  def results
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
       render 'index'
   end
 
-  def show 
+  def show
     @crimes = Crime.all
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
@@ -19,12 +19,12 @@ include ApplicationHelper
     end
   end
 
-  def results 
+  def results
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
       render 'index'
   end
 
-  def index 
+  def index
     @crimes = Crime.all
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
@@ -41,7 +41,7 @@ include ApplicationHelper
       Crime.create(:incidntnum => crime.incidntnum,
                   :category   => crime.category,
                   :descript   => crime.descript,
-                  :dayofweek  => crime.dayofweek,            
+                  :dayofweek  => crime.dayofweek,
                   :date       => DateTime.strptime(crime.date.to_s,"%s").to_date,
                   :time       => mins_since_midnight(crime.time),
                   :pddistrict => crime.pddistrict,
