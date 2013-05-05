@@ -29,23 +29,27 @@ map.flash = function(message, type){
     $('.flash').removeClass(type);
   }, 4000);
 }
+
 map.formOpen = function(){
   $('div.search').addClass('open');
 }
+
 map.formClose = function(){
   $('div.search').removeClass('open');
 }
+
 map.timeoutCallback = function(){
   map.formOpen();
   map.flash("Enter your location!", "warning");
 }
+
 map.showPosition = function(pos) {
   var lat = pos.coords.latitude,
       lon = pos.coords.longitude;
 
-      map.setView([lat, lon], 18);
+    map.setView([lat, lon], 18);
 
-  L.marker([lat,lon], {
+    L.marker([lat,lon], {
       icon: L.icon({
           iconUrl: "http://i.imgur.com/FOqzufV.png",
           iconSize:     [35, 35],
@@ -53,17 +57,18 @@ map.showPosition = function(pos) {
           popupAnchor:  [0, -25]
       })
   }).addTo(map);
-  map.flash("Location Captured!", 'success');
 }
+
 map.errorCallback = function(error){
   if(error.PERMISSION_DENIED){
-    map.flash("Enable your Geo Location!", "warning");
+    map.flash("Enable your Geo Location!", "alert");
   } else if(error.POSITION_UNAVAILABLE){
-    map.flash("Enter a location!", "warning");
+    map.flash("Enter a location!", "alert");
   } else if(error.TIMEOUT){
-    map.flash("hmmm we timed out trying to find where you are hiding!", "warning");
+    map.flash("hmmm we timed out trying to find where you are hiding!", "alert");
   }
 }
+
 navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, timeoutCB, timeoutThreshold){
   var successHandler = successCB;
   var errorHandler = errorCB;
@@ -90,3 +95,20 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     }
   );
 };
+
+map.getCrimes = function(){
+  $.getJSON('/crimes', function(data) {
+    var crimes = data;
+
+    for (x in crimes){
+      L.circle([crimes[x].latitude,crimes[x].longitude],10,{color:'red'},{opacity:'5.0'}).addTo(map);
+    }
+
+    function onMapClick(event) {
+     popup
+     .setLatLng(event.latlng)
+     .setContent("You clicked the map at " + e.latlng.toString())
+     .openOn(map);
+   }
+  });
+}

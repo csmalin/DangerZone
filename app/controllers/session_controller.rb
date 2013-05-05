@@ -1,5 +1,9 @@
 class SessionController < ApplicationController
-  def index
+
+  def home
+
   end
 
+  def index
+  end
 end
