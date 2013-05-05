@@ -15,13 +15,13 @@ navigator.geolocation.getCurrentPosition(geoLocation)
       })
     }).addTo(map);  
 
-    $.getJSON('http://localhost:3000/crimes', function(data) { 
+    $.getJSON('/crimes', function(data) { 
 
       var crimes = data;
 
       for (x in crimes){ 
         
-        L.circle([crimes[x].latitude,crimes[x].longitude],200).addTo(map); 
+        L.circle([crimes[x].latitude,crimes[x].longitude],10,{color:'red'},{opacity:'5.0'}).addTo(map); 
       }
 
         function onMapClick(e) {

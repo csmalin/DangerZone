@@ -47,48 +47,8 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     geocoder (1.1.8)
-=======
-    geocoder (1.1.6)
->>>>>>> formatted date and time, geocode integration
-=======
-    geocoder (1.1.8)
->>>>>>> Merge all of the things!!!
-    hashie (2.0.3)
-=======
-    geocoder (1.1.8)
-<<<<<<< HEAD
-=======
->>>>>>> Rendering the crime data points on the map
     hashie (2.0.4)
-<<<<<<< HEAD
->>>>>>> added search functionality
-=======
-=======
-<<<<<<< HEAD
-=======
->>>>>>> master
-=======
->>>>>>> Rendering the crime data points on the map
->>>>>>> Rendering the crime data points on the map
-    hashie (2.0.3)
->>>>>>> Merge all of the things!!!
-=======
-    geocoder (1.1.8)
-<<<<<<< HEAD
-<<<<<<< HEAD
-    hashie (2.0.4)
-=======
-=======
->>>>>>> master
-    hashie (2.0.3)
->>>>>>> master
->>>>>>> Merge all of the things!!!
     hike (1.2.2)
     i18n (0.6.4)
     journey (1.0.4)
@@ -160,31 +120,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> Rendering the crime data points on the map
-=======
->>>>>>> master
   better_errors
   binding_of_caller
-=======
->>>>>>> Merge all of the things!!!
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> master
-=======
->>>>>>> Rendering the crime data points on the map
->>>>>>> Rendering the crime data points on the map
-=======
-=======
->>>>>>> master
->>>>>>> master
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails
