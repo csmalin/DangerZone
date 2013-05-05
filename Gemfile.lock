@@ -120,11 +120,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-<<<<<<< HEAD
-=======
   better_errors
   binding_of_caller
->>>>>>> 1dfd0dc2e530331c84cbeb6879658e45f18a0f7e
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails
