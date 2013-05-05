@@ -3,6 +3,7 @@ var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv');
 $(document).ready(function(){
   navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 4000);
   map.searchLocationFormInit();
+  map.getCrimes();
 });
 
 map.searchLocationFormInit = function(){
@@ -97,6 +98,7 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
 };
 
 map.getCrimes = function(){
+  $.put('/update');
   $.getJSON('/crimes', function(data) {
     var crimes = data;
 

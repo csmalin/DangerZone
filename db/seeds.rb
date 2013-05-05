@@ -19,4 +19,3 @@ csv.each_with_index do |crime, index|
                    :longitude  => crime["Location"].split(', ')[1].gsub(/\)/, '')
                    )
 	end
-
