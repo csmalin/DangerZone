@@ -129,9 +129,9 @@ padding: 0;
 flaot:right
 }
 
-map-legends leaflet-control{
-	float:left;
-	margin-right:200px;
+
+.leaflet-bottom leaflet-right{
+	float:left	
 }
 
 div.flash.alert {
@@ -159,11 +159,15 @@ display:none;
 pointer-events:all;
 }
 
+.my-legend {
+	float:left;
+}
 .my-legend .legend-title {
 text-align: left;
 margin-bottom: 8px;
 font-weight: bold;
 font-size: 90%;
+float:left
 }
 .my-legend .legend-scale ul {
 margin: 0;
