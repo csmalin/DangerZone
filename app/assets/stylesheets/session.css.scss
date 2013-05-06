@@ -118,8 +118,20 @@ transition: all .5s ease-in-out;
 -webkit-transition: all .5s ease-in-out;
 }
 
-.report{
-display:none;
+.report {
+position: fixed;
+height:100%;
+width: auto;
+left: 1200px;
+-webkit-border-radius: 5px;
+margin: 0;
+padding: 0;
+flaot:right
+}
+
+map-legends leaflet-control{
+	float:left;
+	margin-right:200px;
 }
 
 div.flash.alert {

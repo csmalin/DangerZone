@@ -16,17 +16,20 @@ include ApplicationHelper
 
 
   def create
-    Crime.create(:incidntnum => crime.incidntnum,
+  @get_address = Geocoder.search(params[:latitude],params[:longitude])
+   @crime= Crime.create(:incidntnum => crime.incidntnum,
                   :category   => params[:options],
                   :descript   => params[:incident],
-                  :dayofweek  => crime.dayofweek,            
-                  :date       => DateTime.strptime(crime.date.to_s,"%s").to_date,
-                  :time       => mins_since_midnight(crime.time),
-                  :pddistrict => crime.pddistrict,
-                  :resolution => crime.resolution,
-                  :address    => crime.address,
+                  :dayofweek  => params[:day],            
+                  :date       => params[:date],
+                  :time       => mins_since_midnight(params[:hours_mins]),
+                  :pddistrict => "N/A",
+                  :resolution => "NONE",
+                  :address    => @get_address[0].address,
                   :latitude   => params[:latitude],
                   :longitude  => params[:longitude])
+  @crime.set_safety_score
+  @crime.save
   end 
   
   def index

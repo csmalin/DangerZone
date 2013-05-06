@@ -9,53 +9,43 @@ $(document).ready(function(){
   map.on("click",function(e){
     var latitude = e.latlng.lat;
     var longitude = e.latlng.lng;
-    var report_incident_form_template = '<b>Report an incident:</b><form id="report-form" class="report-incident"><input type="hidden" name="longitude" value='+longitude+'><input type="hidden" name="latitude" value='+latitude+'><textarea name="incident" rows= "4" cols="40" placeholder="Report here!"></textarea><br/><b>Select category:</b><div class="options"><select name="options" size="5"><option value="arson" >ARSON</option><option value="assault" >ASSAULT</option><option value="bad checks" >BAD CHECKS</option><option value="burglary" >BURGLARY</option><option value="disorderly conduct" >DISORDERLY CONDUCT</option><option value="driving under the influence" >DRIVING UNDER THE INFLUENCE</option><option value="drug/narcotic" >DRUG/NARCOTIC</option><option value="drunkeness" >DRUNKENNESS</option><option value="embezzlement" >EMBEZZLEMENT</option><option value="extortion" >EXTORTION</option><option value="family offenses" >FAMILY OFFENSES</option><option value="forgery/counterfeiting" >FORGERY/COUNTERFEITING</option><option value="fraud" >FRAUD</option><option value="gambling" >GAMBLING</option><option value="kidnapping" >KIDNAPPING</option><option value="larceny/theft" >LARCENY/THEFT</option><option value="liquor laws" >LIQUOR LAWS</option><option value="loitering" >LOITERING</option><option value="missing person" >MISSING PERSON</option><option value="non-criminal" >NON-CRIMINAL</option><option value="other offenses" >OTHER OFFENSES</option><option value="prostitution" >PROSTITUTION</option><option value="recovered vehicle" >RECOVERED VEHICLE</option><option value="robery" >ROBBERY</option><option value="runaway" >RUNAWAY</option><option value="sex offenses, forcible" >SEX OFFENSES, FORCIBLE</option><option value="sex offenses, non forcible" >SEX OFFENSES, NON FORCIBLE</option><option value="suicide" >SUICIDE</option><option value="suspicious occ" >SUSPICIOUS OCC</option><option value="trespass" >TRESPASS</option><option value="vandalism" >VANDALISM</option><option value="vehicle theft" >VEHICLE THEFT</option><option value="warrants" >WARRANTS</option><option value="weapon laws">WEAPON LAWS</option></select></div><br><input id ="submit" type="submit" value="Report"></form>';
+    var date = new Date();
+    var weekday=new Array(7);
+        weekday[0]="Sunday";
+        weekday[1]="Monday";
+        weekday[2]="Tuesday";
+        weekday[3]="Wednesday";
+        weekday[4]="Thursday";
+        weekday[5]="Friday";
+        weekday[6]="Saturday";
+    var day = weekday[date.getDay()]
+    var hours_mins = date.getHours() + ":" + date.getMinutes()
+    var date = date.getFullYear()+ "-" +date.getMonth()+ "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()+ ":" + date.getSeconds() ;
+    var report_incident_form_template = '<b>Report an incident:</b><form id="report-form" class="report-incident"><input type="hidden" name="hours_mins" value='+hours_mins+'><input type="hidden" name="date" value='+date+'><input type="hidden" name="day" value='+day+'><input type="hidden" name="longitude" value='+longitude+'><input type="hidden" name="latitude" value='+latitude+'><textarea name="incident" rows= "4" cols="40" placeholder="Report here!"></textarea><br/><b>Select category:</b><div class="options"><select name="options" size="5"><option value="arson" >ARSON</option><option value="assault" >ASSAULT</option><option value="bad checks" >BAD CHECKS</option><option value="burglary" >BURGLARY</option><option value="disorderly conduct" >DISORDERLY CONDUCT</option><option value="driving under the influence" >DRIVING UNDER THE INFLUENCE</option><option value="drug/narcotic" >DRUG/NARCOTIC</option><option value="drunkeness" >DRUNKENNESS</option><option value="embezzlement" >EMBEZZLEMENT</option><option value="extortion" >EXTORTION</option><option value="family offenses" >FAMILY OFFENSES</option><option value="forgery/counterfeiting" >FORGERY/COUNTERFEITING</option><option value="fraud" >FRAUD</option><option value="gambling" >GAMBLING</option><option value="kidnapping" >KIDNAPPING</option><option value="larceny/theft" >LARCENY/THEFT</option><option value="liquor laws" >LIQUOR LAWS</option><option value="loitering" >LOITERING</option><option value="missing person" >MISSING PERSON</option><option value="non-criminal" >NON-CRIMINAL</option><option value="other offenses" >OTHER OFFENSES</option><option value="prostitution" >PROSTITUTION</option><option value="recovered vehicle" >RECOVERED VEHICLE</option><option value="robery" >ROBBERY</option><option value="runaway" >RUNAWAY</option><option value="sex offenses, forcible" >SEX OFFENSES, FORCIBLE</option><option value="sex offenses, non forcible" >SEX OFFENSES, NON FORCIBLE</option><option value="suicide" >SUICIDE</option><option value="suspicious occ" >SUSPICIOUS OCC</option><option value="trespass" >TRESPASS</option><option value="vandalism" >VANDALISM</option><option value="vehicle theft" >VEHICLE THEFT</option><option value="warrants" >WARRANTS</option><option value="weapon laws">WEAPON LAWS</option></select></div><br><input id ="submit" type="submit" value="Report"></form>';
+    
     $('.leaflet-popup-pane').show();
     var marker =L.mapbox.markerLayer({
       type: 'Feature',
       geometry: {
         type: 'Point',
-        // coordinates here are in longitude, latitude order because
-        // x, y is the standard for GeoJSON and many formats
         coordinates: [e.latlng.lng,e.latlng.lat]
       },
       properties: {
         url: 'http://en.wikipedia.org/wiki/Baltimore',
         title: '',
         description: report_incident_form_template,
-        // one can customize markers by adding simplestyle properties
-        // http://mapbox.com/developers/simplestyle/
         'marker-size': 'large',
         'marker-color': '#f0a'
       }
     }).addTo(map);
   });
 
-
-$('.tweet a').click(function(event) {
-  var width  = 575,
-  height = 400,
-  left   = ($(window).width()  - width)  / 2,
-  top    = ($(window).height() - height) / 2,
-  url    = this.href,
-  opts   = 'status=1' +
-  ',width='  + width  +
-  ',height=' + height +
-  ',top='    + top    +
-  ',left='   + left;
-
-  window.open(url, 'twitte', opts);
-
-  return false;
-});
-
-
 $(document).delegate("#report-form","submit",function(e){
   e.preventDefault();
   $('.leaflet-popup-pane').hide();
-  $.post('/crimes',$('form.report-incident').serialize(), function(response) {
-
+  $.post('/crimes',$('form#report-form').serialize(), function(response) {
   },'json');
+  
 });
 
 map.getCrimes();
@@ -122,6 +112,7 @@ map.showPosition = function(pos) {
       popupAnchor:  [0, -25]
     })
   }).addTo(map);
+
 }
 
 map.errorCallback = function(error){
