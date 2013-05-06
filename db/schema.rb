@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(:version => 20130505215051) do
     t.string   "category"
     t.string   "descript"
     t.string   "dayofweek"
-    t.date     "date"
+    t.integer  "date"
     t.integer  "time"
     t.string   "pddistrict"
     t.string   "resolution"

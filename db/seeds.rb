@@ -5,12 +5,12 @@ csv_text = File.read("#{Rails.root}/db/Map__Crime_Incidents_-_Previous_Three_Mon
 csv = CSV.parse(csv_text, :headers => true)
 
 csv.each_with_index do |crime, index|
-		puts index
+	puts index
       Crime.create(:incidntnum => crime["IncidntNum"],
                    :category   => crime["Category"],
                    :descript   => crime["Descript"],
                    :dayofweek  => crime["DayOfWeek"],
-                   :date       => DateTime.strptime(crime["Date"],"%x").to_date,
+                   :date       => DateTime.strptime(crime["Date"], "%m/%d/%Y %I:%M:%S %p %z").to_i,
                    :time       => mins_since_midnight(crime["Time"]),
                    :pddistrict => crime["PdDistrict"],
                    :resolution => crime["Resolution"],
