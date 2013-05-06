@@ -23,13 +23,9 @@ include ApplicationHelper
                   :dayofweek  => params[:day],            
                   :date       => params[:date],
                   :time       => mins_since_midnight(params[:hours_mins]),
-                  :pddistrict => "N/A",
-                  :resolution => "NONE",
                   :address    => @get_address[0].address,
                   :latitude   => params[:latitude],
                   :longitude  => params[:longitude])
-  @crime.set_safety_score
-  @crime.save
   end 
   
   def index
