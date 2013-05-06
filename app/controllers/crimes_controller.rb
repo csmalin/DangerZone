@@ -5,19 +5,15 @@ include ApplicationHelper
   def search
   end
 
-  def results 
+  def results
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
-      render 'index'
+     @crimes.map!{|crime| crime.to_json}
+     @crimes.map!{|crime| JSON.parse(crime)}
+      respond_to do |format|
+        format.json { render :json => @crimes }
+      end
   end
 
-  def index 
-    @crimes = Crime.all
-    @crimes.map!{|crime| crime.to_json}
-    @crimes.map!{|crime| JSON.parse(crime)}
-    respond_to do |format|
-    format.json { render :json => @crimes }
-    end
-  end
 
   def create
     Crime.create(:incidntnum => crime.incidntnum,
@@ -31,6 +27,15 @@ include ApplicationHelper
                   :address    => crime.address,
                   :latitude   => params[:latitude],
                   :longitude  => params[:longitude])
+  end 
+  
+  def index
+    @crimes = Crime.all
+    @crimes.map!{|crime| crime.to_json}
+    @crimes.map!{|crime| JSON.parse(crime)}
+    respond_to do |format|
+      format.json { render :json => @crimes }
+    end
   end
 
   def update
@@ -41,7 +46,7 @@ include ApplicationHelper
       Crime.create(:incidntnum => crime.incidntnum,
                   :category   => crime.category,
                   :descript   => crime.descript,
-                  :dayofweek  => crime.dayofweek,            
+                  :dayofweek  => crime.dayofweek,
                   :date       => DateTime.strptime(crime.date.to_s,"%s").to_date,
                   :time       => mins_since_midnight(crime.time),
                   :pddistrict => crime.pddistrict,
@@ -50,5 +55,7 @@ include ApplicationHelper
                   :latitude   => crime.location.latitude,
                   :longitude  => crime.location.longitude)
      end
+
+     Crime.add_safety_scores
   end
 end

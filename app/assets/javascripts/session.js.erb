@@ -5,6 +5,7 @@ $(document).ready(function(){
   map.legendControl.addLegend($('#legend-content').html());
   navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 4000);
   map.searchLocationFormInit();
+
   map.on("click",function(e){
     var latitude = e.latlng.lat;
     var longitude = e.latlng.lng;
@@ -31,22 +32,22 @@ $(document).ready(function(){
   });
 
 
-    $('.tweet a').click(function(event) {
-    var width  = 575,
-        height = 400,
-        left   = ($(window).width()  - width)  / 2,
-        top    = ($(window).height() - height) / 2,
-        url    = this.href,
-        opts   = 'status=1' +
-                 ',width='  + width  +
-                 ',height=' + height +
-                 ',top='    + top    +
-                 ',left='   + left;
+$('.tweet a').click(function(event) {
+  var width  = 575,
+  height = 400,
+  left   = ($(window).width()  - width)  / 2,
+  top    = ($(window).height() - height) / 2,
+  url    = this.href,
+  opts   = 'status=1' +
+  ',width='  + width  +
+  ',height=' + height +
+  ',top='    + top    +
+  ',left='   + left;
 
-    window.open(url, 'twitte', opts);
+  window.open(url, 'twitte', opts);
 
-    return false;
-  });
+  return false;
+});
 
 
 $(document).delegate("#report-form","submit",function(e){
@@ -57,6 +58,8 @@ $(document).delegate("#report-form","submit",function(e){
   },'json');
 });
 
+map.getCrimes();
+console.log('after get crimes function()');
 });
 
 map.searchLocationFormInit = function(){
@@ -68,8 +71,14 @@ map.searchLocationFormInit = function(){
     event.preventDefault();
     var data = $(this).serialize();
 
-    $.post(console.log(data), '/location', function(loc){
-      map.setView([loc['lat'], loc['lon']], 18);
+    $.getJSON('/geocoder?'+data, function(data){
+      var pos = data.pos.split(" ");
+      var lon = pos[0];
+      var lat = pos[1];
+
+      console.log(lat);
+      console.log(lon);
+      map.setView([lat, lon], 18);
     }, function(error){
       map.alertFlash(error.message);
     });
@@ -153,12 +162,16 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
 };
 
 map.getCrimes = function(){
+  console.log('crimes');
   $.getJSON('/crimes', function(data) {
-    var crimes = data;
+    var crimes =  data;
+    console.log("get json called to /crimes route");
+    console.log(data);
 
     for (x in crimes){
       L.circle([crimes[x].latitude,crimes[x].longitude],10,{color:'red'},{opacity:'5.0'}).addTo(map);
     }
+
 
     function onMapClick(event) {
      popup
@@ -167,8 +180,12 @@ map.getCrimes = function(){
      .openOn(map);
    }
  });
+ };
 
 
-}
+
+
+
+
 
 
