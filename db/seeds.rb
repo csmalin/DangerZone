@@ -10,7 +10,7 @@ csv.each_with_index do |crime, index|
                    :category   => crime["Category"],
                    :descript   => crime["Descript"],
                    :dayofweek  => crime["DayOfWeek"],
-                   :date       => DateTime.strptime(crime["Date"].to_s,"%s").to_date,
+                   :date       => DateTime.strptime(crime["Date"],"%x").to_date,
                    :time       => mins_since_midnight(crime["Time"]),
                    :pddistrict => crime["PdDistrict"],
                    :resolution => crime["Resolution"],
