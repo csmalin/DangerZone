@@ -33,18 +33,18 @@ cursor: pointer;
 
 .options {
 	height:80px;
-	overflow:auto;	
+	overflow:auto;
 	width:250px;
 }
 
 
 .search img {
-width: 17px;
-height: 22px;
-margin: 3.5px 0px;
-margin-left: 6px;
-display: block;
-float: left;
+  width: 19px;
+  height: 21px;
+  margin: 4px 0px;
+  margin-left: 6px;
+  display: block;
+  float: left;
 }
 
 .tweet img {
@@ -131,7 +131,7 @@ flaot:right
 
 
 .leaflet-bottom leaflet-right{
-	float:left	
+	float:left
 }
 
 div.flash.alert {
@@ -150,6 +150,7 @@ border-color: rgb(161,182,136);
 background-color: rgb(181,202,136);
 }
 #marker {
+<<<<<<< HEAD
 position:absolute;
 margin-top:-25px;
 margin-left:-25px;
@@ -197,4 +198,15 @@ clear: both;
 }
 .my-legend a {
 color: #777;
+  position:absolute;
+  margin-top:-25px;
+  margin-left:-25px;
+  width:50px;
+  height:50px;
+  display:none;
+  pointer-events:all;
+}
+.heat {
+  background: -webkit-linear-gradient(blue, red);
+  -webkit-mask-image: url('http://i.imgur.com/Qibp9XS.png?1');
 }

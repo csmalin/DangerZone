@@ -72,8 +72,6 @@ map.searchLocationFormInit = function(){
       map.current_location.lon = pos[0];
       map.current_location.lat = pos[1];
 
-      console.log(map.current_location.lat);
-      console.log(map.current_location.lon);
       map.setView([map.current_location.lat, map.current_location.lon], 18);
       marker.setLatLng([map.current_location.lat, map.current_location.lon]).addTo(map);
 
@@ -108,11 +106,9 @@ map.timeoutCallback = function(){
 }
 
 map.showPosition = function(pos) {
-    map.current_location.lat = pos.coords.latitude;
+    google.map.current_location.lat = pos.coords.latitude;
     map.current_location.lon = pos.coords.longitude;
-    console.log(map.current_location.lat);
-    console.log(map.current_location.lon);
-    map.getCrimes();
+    map.getCrimes(.25);
 
     map.setView([map.current_location.lat, map.current_location.lon], 18);
     marker.setLatLng([map.current_location.lat, map.current_location.lon]).addTo(map);
@@ -154,19 +150,29 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     },{enableHighAccuracy: true});
 };
 
-map.getCrimes = function(){
-  console.log('crimes');
-  console.log(map.current_location.lat);
-  console.log(map.current_location.lon);
-  $.getJSON('/crimes?distance=1000&location='+map.current_location.lat+' '+map.current_location.lon, function(data) {
+map.getCrimes = function(distance){
+  var badIcon = L.icon({
+    iconUrl: 'http://i.imgur.com/jwpv6oo.png', //http://i.imgur.com/Qibp9XS.png?1
+    iconSize: [42, 42],
+  });
+  var medIcon = L.icon({
+    iconUrl: 'http://i.imgur.com/C9TaYMs.png',
+    iconSize: [42,42],
+  });
+
+  L.marker([50.505, 30.57], {icon: badIcon}).addTo(map);
+
+  $.getJSON('/crimes?distance='+distance+'&location='+map.current_location.lat+', '+map.current_location.lon, function(data) {
     var crimes =  data;
-    console.log("get json called to /crimes route");
-    console.log(data);
 
     for (x in crimes){
-      L.circle([crimes[x].latitude,crimes[x].longitude],10,{color:'red'},{opacity:'5.0'}).addTo(map);
+      console.log(crimes);
+      if (crimes[x].safety_score == "2"){
+        L.marker([crimes[x].latitude, crimes[x].longitude], {icon: badIcon, className: 'heat'}).addTo(map);
+      } else if (crimes[x].safety_score == "1"){
+        L.marker([crimes[x].latitude, crimes[x].longitude], {icon: medIcon, className: 'heat'}).addTo(map);
+      }
     }
-
 
     function onMapClick(event) {
      popup
