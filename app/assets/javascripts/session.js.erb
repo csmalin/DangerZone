@@ -1,9 +1,15 @@
 var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv');
 
-
+var marker = L.marker([0,0],
+                {icon: L.icon({
+                    iconUrl: "http://i.imgur.com/FOqzufV.png",
+                    iconSize:[35, 35],
+                    iconAnchor:[25, 25],
+                    popupAnchor:[0, -25]
+                  })
+              });
 $(document).ready(function(){
-  map.legendControl.addLegend($('#legend-content').html());
-  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 4000);
+  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 5000);
   map.searchLocationFormInit();
 
   map.on("click",function(e){
@@ -22,7 +28,7 @@ $(document).ready(function(){
     var hours_mins = date.getHours() + ":" + date.getMinutes()
     var date = date.getFullYear()+ "-" +date.getMonth()+ "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()+ ":" + date.getSeconds() ;
     var report_incident_form_template = '<b>Report an incident:</b><form id="report-form" class="report-incident"><input type="hidden" name="hours_mins" value='+hours_mins+'><input type="hidden" name="date" value='+date+'><input type="hidden" name="day" value='+day+'><input type="hidden" name="longitude" value='+longitude+'><input type="hidden" name="latitude" value='+latitude+'><textarea name="incident" rows= "4" cols="40" placeholder="Report here!"></textarea><br/><b>Select category:</b><div class="options"><select name="options" size="5"><option value="arson" >ARSON</option><option value="assault" >ASSAULT</option><option value="bad checks" >BAD CHECKS</option><option value="burglary" >BURGLARY</option><option value="disorderly conduct" >DISORDERLY CONDUCT</option><option value="driving under the influence" >DRIVING UNDER THE INFLUENCE</option><option value="drug/narcotic" >DRUG/NARCOTIC</option><option value="drunkeness" >DRUNKENNESS</option><option value="embezzlement" >EMBEZZLEMENT</option><option value="extortion" >EXTORTION</option><option value="family offenses" >FAMILY OFFENSES</option><option value="forgery/counterfeiting" >FORGERY/COUNTERFEITING</option><option value="fraud" >FRAUD</option><option value="gambling" >GAMBLING</option><option value="kidnapping" >KIDNAPPING</option><option value="larceny/theft" >LARCENY/THEFT</option><option value="liquor laws" >LIQUOR LAWS</option><option value="loitering" >LOITERING</option><option value="missing person" >MISSING PERSON</option><option value="non-criminal" >NON-CRIMINAL</option><option value="other offenses" >OTHER OFFENSES</option><option value="prostitution" >PROSTITUTION</option><option value="recovered vehicle" >RECOVERED VEHICLE</option><option value="robery" >ROBBERY</option><option value="runaway" >RUNAWAY</option><option value="sex offenses, forcible" >SEX OFFENSES, FORCIBLE</option><option value="sex offenses, non forcible" >SEX OFFENSES, NON FORCIBLE</option><option value="suicide" >SUICIDE</option><option value="suspicious occ" >SUSPICIOUS OCC</option><option value="trespass" >TRESPASS</option><option value="vandalism" >VANDALISM</option><option value="vehicle theft" >VEHICLE THEFT</option><option value="warrants" >WARRANTS</option><option value="weapon laws">WEAPON LAWS</option></select></div><br><input id ="submit" type="submit" value="Report"></form>';
-    
+
     $('.leaflet-popup-pane').show();
     var marker =L.mapbox.markerLayer({
       type: 'Feature',
@@ -45,7 +51,7 @@ $(document).delegate("#report-form","submit",function(e){
   $('.leaflet-popup-pane').hide();
   $.post('/crimes',$('form#report-form').serialize(), function(response) {
   },'json');
-  
+
 });
 
 map.getCrimes();
@@ -69,6 +75,9 @@ map.searchLocationFormInit = function(){
       console.log(lat);
       console.log(lon);
       map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]).addTo(map);
+
+      map.formClose();
     }, function(error){
       map.alertFlash(error.message);
     });
@@ -102,17 +111,8 @@ map.showPosition = function(pos) {
   var lat = pos.coords.latitude,
   lon = pos.coords.longitude;
 
-  map.setView([lat, lon], 18);
-
-  L.marker([lat,lon], {
-    icon: L.icon({
-      iconUrl: "http://i.imgur.com/FOqzufV.png",
-      iconSize:     [35, 35],
-      iconAnchor:   [25, 25],
-      popupAnchor:  [0, -25]
-    })
-  }).addTo(map);
-
+    map.setView([lat, lon], 18);
+    marker.setLatLng([lat, lon]).addTo(map);
 }
 
 map.errorCallback = function(error){
