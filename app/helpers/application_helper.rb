@@ -6,5 +6,4 @@ module ApplicationHelper
     (Time.parse(time).strftime("%H").to_i * 60) + Time.parse(time).strftime("%M").to_i
   end
 
-
 end

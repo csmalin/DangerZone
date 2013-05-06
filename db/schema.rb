@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130505215051) do
+ActiveRecord::Schema.define(:version => 20130506180543) do
 
   create_table "crimes", :force => true do |t|
     t.integer  "incidntnum"
     t.string   "category"
     t.string   "descript"
     t.string   "dayofweek"
-    t.date     "date"
-    t.integer  "time"
+    t.datetime "date"
+    t.time     "time"
     t.string   "pddistrict"
     t.string   "resolution"
     t.string   "address"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20130505215051) do
     t.decimal  "longitude",    :precision => 17, :scale => 13
     t.datetime "created_at",                                                  :null => false
     t.datetime "updated_at",                                                  :null => false
-    t.integer  "safety_score",                                 :default => 0
+    t.integer  "threat_level",                                 :default => 0
   end
 
 end
