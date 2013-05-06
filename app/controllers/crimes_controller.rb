@@ -15,21 +15,17 @@ include ApplicationHelper
   end
 
   def show
-    @crimes = Crime.all
-    @crimes.map!{|crime| crime.to_json}
-    @crimes.map!{|crime| JSON.parse(crime)}
-    respond_to do |format|
-      format.json { render :json => @crimes }
-    end
   end
 
   def index
-    @crimes = Crime.all
+    @crimes = Crime.near(params[:coordinates], params[:distance].to_f)
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
+
     respond_to do |format|
       format.json { render :json => @crimes }
     end
+
   end
 
   def update
@@ -49,7 +45,5 @@ include ApplicationHelper
                   :latitude   => crime.location.latitude,
                   :longitude  => crime.location.longitude)
      end
-
-     Crime.add_safety_scores
   end
 end
