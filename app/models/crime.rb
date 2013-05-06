@@ -10,7 +10,7 @@ class Crime < ActiveRecord::Base
 	 def add_safety_scores
       major = ["ARSON", "ASSAULT", "BURGLARY", "EXTORTION", "KIDNAPPING", "LARCENY/THEFT", "ROBBERY", "SEX OFFENSES, FORCIBLE","SEX OFFENSES, NON FORCIBLE", "VEHICLE THEFT", "WEAPON LAWS"]
       minor = ["DISORDERLY", "DRUG/NARCOTIC", "DRUNKENNESS", "OTHER OFFENSES", "PROSTITUTION", "SUSPICIOUS OCC", "TRESPASS", "VANDALISM"]
-      this.safety_score = 2 if major.contain?(this.crime.upcase)
-      this.safety_score = 1 if minor.contain?(this.crime)
+      self.safety_score = 2 if major.include?(self.category.upcase)
+      self.safety_score = 1 if minor.include?(self.category.upcase)
   end
 end

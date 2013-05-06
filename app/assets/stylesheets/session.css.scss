@@ -17,9 +17,9 @@ body { margin:0; padding:0; }
   cursor: pointer;
 }
 .search img {
-  width: 17px;
-  height: 22px;
-  margin: 3.5px 0px;
+  width: 19px;
+  height: 21px;
+  margin: 4px 0px;
   margin-left: 6px;
   display: block;
   float: left;
@@ -107,4 +107,8 @@ div.flash.success {
   height:50px;
   display:none;
   pointer-events:all;
+}
+.heat {
+  background: -webkit-linear-gradient(blue, red);
+  -webkit-mask-image: url('http://i.imgur.com/Qibp9XS.png?1');
 }
