@@ -14,27 +14,31 @@ include ApplicationHelper
       end
   end
 
+  def show
+  end
 
   def create
   @get_address = Geocoder.search(params[:latitude],params[:longitude])
    @crime= Crime.create(:incidntnum => crime.incidntnum,
                   :category   => params[:options],
                   :descript   => params[:incident],
-                  :dayofweek  => params[:day],            
+                  :dayofweek  => params[:day],
                   :date       => params[:date],
                   :time       => mins_since_midnight(params[:hours_mins]),
                   :address    => @get_address[0].address,
                   :latitude   => params[:latitude],
                   :longitude  => params[:longitude])
-  end 
-  
+  end
+
   def index
-    @crimes = Crime.all
+    @crimes = Crime.near(params[:coordinates], params[:distance].to_f)
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
+
     respond_to do |format|
       format.json { render :json => @crimes }
     end
+
   end
 
   def update
