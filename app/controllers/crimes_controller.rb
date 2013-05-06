@@ -7,7 +7,11 @@ include ApplicationHelper
 
   def results
      @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
-      render 'index'
+     @crimes.map!{|crime| crime.to_json}
+     @crimes.map!{|crime| JSON.parse(crime)}
+      respond_to do |format|
+        format.json { render :json => @crimes }
+      end
   end
 
   def show
@@ -15,13 +19,8 @@ include ApplicationHelper
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
     respond_to do |format|
-    format.json { render :json => @crimes }
+      format.json { render :json => @crimes }
     end
-  end
-
-  def results
-     @crimes = Crime.near("#{params[:address]}, San Francisco, CA", params[:distance].to_f)
-      render 'index'
   end
 
   def index
@@ -29,7 +28,7 @@ include ApplicationHelper
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
     respond_to do |format|
-    format.json { render :json => @crimes }
+      format.json { render :json => @crimes }
     end
   end
 
