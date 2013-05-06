@@ -1,64 +1,33 @@
-var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv');
-map.current_location = {lat: 0, lon: 0};
-var marker = L.marker([0,0],
-                {icon: L.icon({
-                    iconUrl: "http://i.imgur.com/FOqzufV.png",
-                    iconSize:[35, 35],
-                    iconAnchor:[25, 25],
-                    popupAnchor:[0, -25]
-                  })
-              });
+var app = {};
+var map;
+
+app.google_current_location = new google.maps.LatLng(-122.437, 37.765);
+app.current_location = {lat: -122.437, lon: 37.765};
+
+
+var mapOptions = {
+  zoom: 18,
+  center: app.google_current_location,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+
+map = new google.maps.Map(document.getElementById('map'),mapOptions);
+
+app.geolocation = new google.maps.Marker({
+  position: app.google_current_location,
+  map: map,
+  title: 'Your geolocation',
+  icon: 'http://i.imgur.com/FOqzufV.png'
+});
+
+
 $(document).ready(function(){
-  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 5000);
-  map.searchLocationFormInit();
-
-  map.on("click",function(e){
-    var latitude = e.latlng.lat;
-    var longitude = e.latlng.lng;
-    var date = new Date();
-    var weekday=new Array(7);
-        weekday[0]="Sunday";
-        weekday[1]="Monday";
-        weekday[2]="Tuesday";
-        weekday[3]="Wednesday";
-        weekday[4]="Thursday";
-        weekday[5]="Friday";
-        weekday[6]="Saturday";
-    var day = weekday[date.getDay()]
-    var hours_mins = date.getHours() + ":" + date.getMinutes()
-    var date = date.getFullYear()+ "-" +date.getMonth()+ "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()+ ":" + date.getSeconds() ;
-    var report_incident_form_template = '<b>Report an incident:</b><form id="report-form" class="report-incident"><input type="hidden" name="hours_mins" value='+hours_mins+'><input type="hidden" name="date" value='+date+'><input type="hidden" name="day" value='+day+'><input type="hidden" name="longitude" value='+longitude+'><input type="hidden" name="latitude" value='+latitude+'><textarea name="incident" rows= "4" cols="40" placeholder="Report here!"></textarea><br/><b>Select category:</b><div class="options"><select name="options" size="5"><option value="arson" >ARSON</option><option value="assault" >ASSAULT</option><option value="bad checks" >BAD CHECKS</option><option value="burglary" >BURGLARY</option><option value="disorderly conduct" >DISORDERLY CONDUCT</option><option value="driving under the influence" >DRIVING UNDER THE INFLUENCE</option><option value="drug/narcotic" >DRUG/NARCOTIC</option><option value="drunkeness" >DRUNKENNESS</option><option value="embezzlement" >EMBEZZLEMENT</option><option value="extortion" >EXTORTION</option><option value="family offenses" >FAMILY OFFENSES</option><option value="forgery/counterfeiting" >FORGERY/COUNTERFEITING</option><option value="fraud" >FRAUD</option><option value="gambling" >GAMBLING</option><option value="kidnapping" >KIDNAPPING</option><option value="larceny/theft" >LARCENY/THEFT</option><option value="liquor laws" >LIQUOR LAWS</option><option value="loitering" >LOITERING</option><option value="missing person" >MISSING PERSON</option><option value="non-criminal" >NON-CRIMINAL</option><option value="other offenses" >OTHER OFFENSES</option><option value="prostitution" >PROSTITUTION</option><option value="recovered vehicle" >RECOVERED VEHICLE</option><option value="robery" >ROBBERY</option><option value="runaway" >RUNAWAY</option><option value="sex offenses, forcible" >SEX OFFENSES, FORCIBLE</option><option value="sex offenses, non forcible" >SEX OFFENSES, NON FORCIBLE</option><option value="suicide" >SUICIDE</option><option value="suspicious occ" >SUSPICIOUS OCC</option><option value="trespass" >TRESPASS</option><option value="vandalism" >VANDALISM</option><option value="vehicle theft" >VEHICLE THEFT</option><option value="warrants" >WARRANTS</option><option value="weapon laws">WEAPON LAWS</option></select></div><br><input id ="submit" type="submit" value="Report"></form>';
-
-    $('.leaflet-popup-pane').show();
-    var marker =L.mapbox.markerLayer({
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [e.latlng.lng,e.latlng.lat]
-      },
-      properties: {
-        url: 'http://en.wikipedia.org/wiki/Baltimore',
-        title: '',
-        description: report_incident_form_template,
-        'marker-size': 'large',
-        'marker-color': '#f0a'
-      }
-    }).addTo(map);
-  });
-
-$(document).delegate("#report-form","submit",function(e){
-  e.preventDefault();
-  $('.leaflet-popup-pane').hide();
-  $.post('/crimes',$('form#report-form').serialize(), function(response) {
-  },'json');
-
+  navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
+  app.searchLocationFormInit();
+  console.log('after get crimes function()');
 });
 
-map.getCrimes();
-console.log('after get crimes function()');
-});
-
-map.searchLocationFormInit = function(){
+app.searchLocationFormInit = function(){
   $('div.search img').click(function(){
     $('div.search').toggleClass('open');
   });
@@ -69,58 +38,60 @@ map.searchLocationFormInit = function(){
 
     $.getJSON('/geocoder?'+data, function(data){
       var pos = data.pos.split(" ");
-      map.current_location.lon = pos[0];
-      map.current_location.lat = pos[1];
 
-      map.setView([map.current_location.lat, map.current_location.lon], 18);
-      marker.setLatLng([map.current_location.lat, map.current_location.lon]).addTo(map);
+      app.google_current_location = new google.maps.LatLng(pos[0], pos[1]);
+      app.current_location = {lat: pos[0], lon: pos[1]};
 
-      map.formClose();
+      map.center(app.current_location);
+
+      app.formClose();
     }, function(error){
-      map.alertFlash(error.message);
+      app.alertFlash(error.message);
     });
 
   });
 }
 
-
-
-map.flash = function(message, type){
+app.flash = function(message, type){
   $('.flash').addClass(type).text(message);
+
   window.setTimeout(function(){
     $('.flash').removeClass(type);
   }, 4000);
+
 }
 
-map.formOpen = function(){
+app.formOpen = function(){
   $('div.search').addClass('open');
 }
 
-map.formClose = function(){
+app.formClose = function(){
   $('div.search').removeClass('open');
 }
 
-map.timeoutCallback = function(){
-  map.formOpen();
-  map.flash("Enter your location!", "warning");
+app.timeoutCallback = function(){
+  app.formOpen();
+  app.flash("Enter your location!", "warning");
 }
 
-map.showPosition = function(pos) {
-    google.map.current_location.lat = pos.coords.latitude;
-    map.current_location.lon = pos.coords.longitude;
-    map.getCrimes(.25);
+app.showPosition = function(pos) {
+    app.getCrimes(5);
+    app.google_current_location = new google.maps.LatLng(pos.coords.latitude ,pos.coords.longitude);
+    app.current_location.lat = pos.coords.latitude;
+    app.current_location.lon = pos.coords.longitude;
 
-    map.setView([map.current_location.lat, map.current_location.lon], 18);
-    marker.setLatLng([map.current_location.lat, map.current_location.lon]).addTo(map);
+    map.setCenter(app.google_current_location);
+
+    app.geolocation.setPosition(app.google_current_location);
 }
 
-map.errorCallback = function(error){
+app.errorCallback = function(error){
   if(error.PERMISSION_DENIED){
-    map.flash("Enable your Geo Location!", "alert");
+    app.flash("Enable your Geo Location!", "alert");
   } else if(error.POSITION_UNAVAILABLE){
-    map.flash("Enter a location!", "alert");
+    app.flash("Enter a location!", "alert");
   } else if(error.TIMEOUT){
-    map.flash("hmmm we timed out trying to find where you are hiding!", "alert");
+    app.flash("hmmm we timed out trying to find where you are hiding!", "alert");
   }
 }
 
@@ -150,43 +121,26 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     },{enableHighAccuracy: true});
 };
 
-map.getCrimes = function(distance){
-  var badIcon = L.icon({
-    iconUrl: 'http://i.imgur.com/jwpv6oo.png', //http://i.imgur.com/Qibp9XS.png?1
-    iconSize: [42, 42],
-  });
-  var medIcon = L.icon({
-    iconUrl: 'http://i.imgur.com/C9TaYMs.png',
-    iconSize: [42,42],
-  });
+app.getCrimes = function(distance){
+  console.log(app.current_location);
 
-  L.marker([50.505, 30.57], {icon: badIcon}).addTo(map);
-
-  $.getJSON('/crimes?distance='+distance+'&location='+map.current_location.lat+', '+map.current_location.lon, function(data) {
+  $.getJSON('/crimes?distance='+distance+'&location='+app.current_location.lon+', '+app.current_location.lat, function(data) {
     var crimes =  data;
+    var heatMapData = [];
+    console.log(crimes)
 
     for (x in crimes){
-      console.log(crimes);
       if (crimes[x].safety_score == "2"){
-        L.marker([crimes[x].latitude, crimes[x].longitude], {icon: badIcon, className: 'heat'}).addTo(map);
+        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
       } else if (crimes[x].safety_score == "1"){
-        L.marker([crimes[x].latitude, crimes[x].longitude], {icon: medIcon, className: 'heat'}).addTo(map);
+        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
       }
     }
+    console.log(heatMapData);
 
-    function onMapClick(event) {
-     popup
-     .setLatLng(event.latlng)
-     .setContent("You clicked the map at " + e.latlng.toString())
-     .openOn(map);
-   }
- });
- };
-
-
-
-
-
-
-
-
+    var heatmap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
+    console.log(heatmap );
+    console.log(map);
+    heatmap.setMap(map);
+  });
+}
