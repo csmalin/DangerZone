@@ -1,7 +1,14 @@
 var map = L.mapbox.map('map', 'alex-ray.map-p9i5ggnv');
-
+var marker = L.marker([0,0],
+                {icon: L.icon({
+                    iconUrl: "http://i.imgur.com/FOqzufV.png",
+                    iconSize:[35, 35],
+                    iconAnchor:[25, 25],
+                    popupAnchor:[0, -25]
+                  })
+              });
 $(document).ready(function(){
-  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 4000);
+  navigator.geolocation.requestCurrentPosition(map.showPosition, map.errorCallback, map.timeoutCallback, 5000);
   map.searchLocationFormInit();
   map.getCrimes();
   console.log('after get crimes function()');
@@ -24,6 +31,9 @@ map.searchLocationFormInit = function(){
       console.log(lat);
       console.log(lon);
       map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]).addTo(map);
+
+      map.formClose();
     }, function(error){
       map.alertFlash(error.message);
     });
@@ -56,15 +66,7 @@ map.showPosition = function(pos) {
       lon = pos.coords.longitude;
 
     map.setView([lat, lon], 18);
-
-    L.marker([lat,lon], {
-      icon: L.icon({
-          iconUrl: "http://i.imgur.com/FOqzufV.png",
-          iconSize:     [35, 35],
-          iconAnchor:   [25, 25],
-          popupAnchor:  [0, -25]
-      })
-  }).addTo(map);
+    marker.setLatLng([lat, lon]).addTo(map);
 }
 
 map.errorCallback = function(error){
