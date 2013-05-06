@@ -50,5 +50,7 @@ include ApplicationHelper
                   :latitude   => crime.location.latitude,
                   :longitude  => crime.location.longitude)
      end
+
+     Crime.add_safety_scores
   end
 end
