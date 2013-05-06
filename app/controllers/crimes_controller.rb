@@ -14,15 +14,21 @@ include ApplicationHelper
       end
   end
 
-  def show
-    @crimes = Crime.all
-    @crimes.map!{|crime| crime.to_json}
-    @crimes.map!{|crime| JSON.parse(crime)}
-    respond_to do |format|
-      format.json { render :json => @crimes }
-    end
-  end
 
+  def create
+    Crime.create(:incidntnum => crime.incidntnum,
+                  :category   => params[:options],
+                  :descript   => params[:incident],
+                  :dayofweek  => crime.dayofweek,            
+                  :date       => DateTime.strptime(crime.date.to_s,"%s").to_date,
+                  :time       => mins_since_midnight(crime.time),
+                  :pddistrict => crime.pddistrict,
+                  :resolution => crime.resolution,
+                  :address    => crime.address,
+                  :latitude   => params[:latitude],
+                  :longitude  => params[:longitude])
+  end 
+  
   def index
     @crimes = Crime.all
     @crimes.map!{|crime| crime.to_json}
