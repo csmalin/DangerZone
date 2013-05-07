@@ -1,65 +1,77 @@
 var app = {};
-var map;
 
-app.google_current_location = new google.maps.LatLng(-122.437, 37.765);
+app.map;
+app.mapContainer = 'map';
+
+app.google_location = new google.maps.LatLng(-122.437, 37.765);
 app.current_location = {lat: -122.437, lon: 37.765};
-var styles = [
-  {
-    "featureType": "road.arterial",
-    "elementType": "geometry.fill",
-    "stylers": [
-      { "hue": "#aaff00" },
-      { "color": "#ffffff" },
-      { "weight": 3 }
-    ]
-  },{
-    "featureType": "road.arterial",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      { "color": "#d2d2d0" },
-      { "weight": 2 }
-    ]
-  },{
-    "featureType": "road.arterial",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      { "color": "#ffffff" }
-    ]
-  },{
-    "featureType": "road.arterial",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      { "color": "#bcbbba" },
-      { "weight": 1.9 }
-    ]
-  },{
-  }
-]
 
-var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
-
-var mapOptions = {
+app.mapOptions = {
   zoom: 18,
-  center: app.google_current_location,
+  center: self.google_location,
   disableDefaultUI: true,
   zoomControl: true,
   mapTypeControlOptions: {
     mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
   }
 };
-var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-map.mapTypes.set('map_style', styledMap);
-map.setMapTypeId('map_style');
+app.mapStyles = [
+    {
+      "featureType": "road.arterial",
+      "elementType": "geometry.fill",
+      "stylers": [
+        { "hue": "#aaff00" },
+        { "color": "#ffffff" },
+        { "weight": 3 }
+      ]
+    },{
+      "featureType": "road.arterial",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        { "color": "#d2d2d0" },
+        { "weight": 2 }
+      ]
+    },{
+      "featureType": "road.arterial",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        { "color": "#ffffff" }
+      ]
+    },{
+      "featureType": "road.arterial",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        { "color": "#bcbbba" },
+        { "weight": 1.9 }
+      ]
+    },{
+    }
+  ];
 
+app.createMap = function(){
+  var self = this;
+  self.styledMap = new google.maps.StyledMapType(self.mapStyles,{name: "Styled Map"});
 
-app.geolocation = new google.maps.Marker({
-  position: app.google_current_location,
-  map: map,
-  title: 'Your geolocation',
-  icon: 'http://i.imgur.com/FOqzufV.png'
-});
+  self.map = new google.maps.Map(document.getElementById(self.mapContainer), self.mapOptions);
 
+  self.map.mapTypes.set('map_style', self.styledMap);
+  self.map.setMapTypeId('map_style');
+
+  self.setMarker();
+}
+
+app.setMarker = function() {
+  var self = this;
+  self.geolocationMarker = new google.maps.Marker({
+    position: self.google_location,
+    map: self.map,
+    title: 'Your geolocation',
+    icon: 'http://i.imgur.com/FOqzufV.png'
+  });
+}
+
+app.createMap();
 
 $(document).ready(function(){
   navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
@@ -86,12 +98,12 @@ app.searchLocationFormInit = function(){
       var pos = data.pos.split(" ");
       console.log('form returned');
 
-      app.google_current_location = new google.maps.LatLng(pos[1], pos[0]);
+      app.google_location = new google.maps.LatLng(pos[1], pos[0]);
       app.current_location.lat = pos[0];
       app.current_location.lon = pos[1];
 
-      map.setCenter(app.google_current_location);
-      app.geolocation.setPosition(app.google_current_location);
+      app.map.setCenter(app.google_location);
+      app.geolocationMarker.setPosition(app.google_location);
 
       app.formClose();
     }, function(error){
@@ -125,13 +137,13 @@ app.timeoutCallback = function(){
 
 app.showPosition = function(pos) {
     app.getCrimes(5);
-    app.google_current_location = new google.maps.LatLng(pos.coords.latitude ,pos.coords.longitude);
+    app.google_location = new google.maps.LatLng(pos.coords.latitude ,pos.coords.longitude);
     app.current_location.lat = pos.coords.latitude;
     app.current_location.lon = pos.coords.longitude;
 
-    map.setCenter(app.google_current_location);
+    app.map.setCenter(app.google_location);
 
-    app.geolocation.setPosition(app.google_current_location);
+    app.geolocationMarker.setPosition(app.google_location);
 }
 
 app.errorCallback = function(error){
@@ -190,9 +202,7 @@ app.getCrimes = function(distance){
     console.log(heatMapData);
 
     var heatmap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
-    console.log(heatmap );
-    console.log(map);
-    heatmap.setMap(map);
+    heatmap.setMap(app.map);
     var gradient = [
        'rgba(255, 235, 10, 0)',
        'rgba(255, 235, 10, 1)',
