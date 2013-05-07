@@ -1,4 +1,3 @@
-require 'soda/client'
 
 class Crime < ActiveRecord::Base
 
