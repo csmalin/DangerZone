@@ -64,8 +64,14 @@ app.geolocation = new google.maps.Marker({
 $(document).ready(function(){
   navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
   app.searchLocationFormInit();
-  console.log('after get crimes function()');
+  app.layersDropdownInit();
 });
+
+app.layersDropdownInit = function(){
+  $('div.layers').click(function(event){
+      $('div.layers').toggleClass('open');
+  });
+}
 
 app.searchLocationFormInit = function(){
   $('div.search img').click(function(){

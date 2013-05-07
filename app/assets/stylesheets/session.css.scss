@@ -123,3 +123,80 @@ opacity: .9;
   border-color: rgb(161,182,136);
   background-color: rgb(181,202,136);
 }
+div.layers {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  top: 90px;
+  left: 50px;
+  background-color: white;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  div.button {
+    width: 30px;
+    height: 30px;
+    background: url('http://i.imgur.com/vrSBmxl.png') center center;
+  }
+  &:hover {
+    background-color: #ccc;
+  }
+  ul {
+    height: 0;
+    display: none;
+  }
+}
+div.layers.open {
+  width: auto;
+  height: auto;
+  &:hover {
+    background-color: white;
+  }
+  div.button {
+    width: 30px;
+    height: 30px;
+    background: url('http://i.imgur.com/X8Om8sI.png') center center;
+  }
+  ul {
+      display: block;
+      height: auto;
+      width: 200px;
+      margin: 0;
+      padding: 0;
+      -webkit-transition: all 1s ease-in-out;
+      -moz-transition: all 1s ease-in-out;
+      transition: all 1s ease-in-out;
+  }
+  li:first-child {
+    border-top: none;
+  }
+  li:last-child {
+    -webkit-border-radius: 0px 5px 0px 5px;
+    -moz-border-radius: 0px 5px 0px 5px;
+    border-radius: 0px 0px 5px 5px;
+  }
+  li {
+    background-color: white;
+    text-decoration: none;
+    list-style-type: none;
+    padding: 10px 0px;
+    color: #666;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(244,244,244);
+      box-shadow: 0px 0px 1px #ccc inset;
+    }
+  }
+  li.active {
+    background-color: rgb(244,244,244);
+    box-shadow: 0px 0px 1px #ccc inset;
+  }
+}
+
