@@ -10,7 +10,7 @@ var styles = [
     "stylers": [
       { "hue": "#aaff00" },
       { "color": "#ffffff" },
-      { "weight": 8 }
+      { "weight": 3 }
     ]
   },{
     "featureType": "road.arterial",
@@ -41,6 +41,8 @@ var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
 var mapOptions = {
   zoom: 18,
   center: app.google_current_location,
+  disableDefaultUI: true,
+  zoomControl: true,
   mapTypeControlOptions: {
     mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
   }
@@ -62,8 +64,14 @@ app.geolocation = new google.maps.Marker({
 $(document).ready(function(){
   navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
   app.searchLocationFormInit();
-  console.log('after get crimes function()');
+  app.layersDropdownInit();
 });
+
+app.layersDropdownInit = function(){
+  $('div.layers').click(function(event){
+      $('div.layers').toggleClass('open');
+  });
+}
 
 app.searchLocationFormInit = function(){
   $('div.search img').click(function(){
@@ -73,14 +81,17 @@ app.searchLocationFormInit = function(){
   $('form.location-search').on('submit', function(event){
     event.preventDefault();
     var data = $(this).serialize();
-
+    console.log('form sent');
     $.getJSON('/geocoder?'+data, function(data){
       var pos = data.pos.split(" ");
+      console.log('form returned');
 
-      app.google_current_location = new google.maps.LatLng(pos[0], pos[1]);
-      app.current_location = {lat: pos[0], lon: pos[1]};
+      app.google_current_location = new google.maps.LatLng(pos[1], pos[0]);
+      app.current_location.lat = pos[0];
+      app.current_location.lon = pos[1];
 
-      map.center(app.current_location);
+      map.setCenter(app.google_current_location);
+      app.geolocation.setPosition(app.google_current_location);
 
       app.formClose();
     }, function(error){
