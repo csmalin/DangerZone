@@ -3,15 +3,53 @@ var map;
 
 app.google_current_location = new google.maps.LatLng(-122.437, 37.765);
 app.current_location = {lat: -122.437, lon: 37.765};
+var styles = [
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "hue": "#aaff00" },
+      { "color": "#ffffff" },
+      { "weight": 8 }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "color": "#d2d2d0" },
+      { "weight": 2 }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#ffffff" }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#bcbbba" },
+      { "weight": 1.9 }
+    ]
+  },{
+  }
+]
 
+var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
 
 var mapOptions = {
   zoom: 18,
   center: app.google_current_location,
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-}
+  mapTypeControlOptions: {
+    mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+  }
+};
+var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-map = new google.maps.Map(document.getElementById('map'),mapOptions);
+map.mapTypes.set('map_style', styledMap);
+map.setMapTypeId('map_style');
+
 
 app.geolocation = new google.maps.Marker({
   position: app.google_current_location,
@@ -131,9 +169,9 @@ app.getCrimes = function(distance){
 
     for (x in crimes){
       if (crimes[x].safety_score == "2"){
-        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
       } else if (crimes[x].safety_score == "1"){
-        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
       }
     }
     console.log(heatMapData);
@@ -142,5 +180,18 @@ app.getCrimes = function(distance){
     console.log(heatmap );
     console.log(map);
     heatmap.setMap(map);
+    var gradient = [
+       'rgba(255, 235, 10, 0)',
+       'rgba(255, 235, 10, 1)',
+       'rgba(255, 222, 10, 1)',
+       'rgba(255, 177, 10, 1)',
+       'rgba(255, 141, 10, 1)',
+       'rgba(255, 96, 10, 1)',
+       'rgba(255, 55, 10, 1)',
+       'rgba(255, 39, 10, 1)'
+     ]
+
+    heatmap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80 });
+
   });
 }
