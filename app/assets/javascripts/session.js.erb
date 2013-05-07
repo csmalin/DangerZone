@@ -1,175 +1,192 @@
-var app = {};
+// App Objects
+var app         = {};
+app.map         = {};
+app.map.geo     = {};
+app.observer    = {};
+app.view        = {};
+app.crimes      = {};
 
-app.map;
-app.mapContainer = 'map';
+//Initialize Application
+app.initialize = function() {
+  app.map.initialize();
+  app.observer.initialize();
+}
 
-app.google_location = new google.maps.LatLng(-122.437, 37.765);
-app.current_location = {lat: -122.437, lon: 37.765};
+// Map Configurations
+app.map.container       = 'map';
+app.map.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
+app.map.currentLocation = {lat: -122.437, lng: 37.765};
 
-app.mapOptions = {
-  zoom: 18,
-  center: self.google_location,
+app.map.options = {
+  zoom:             18,
+  center:           app.map.googleLocation,
   disableDefaultUI: true,
-  zoomControl: true,
+  zoomControl:      true,
   mapTypeControlOptions: {
-    mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+    mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'styled_map']
   }
 };
 
-app.mapStyles = [
-    {
-      "featureType": "road.arterial",
-      "elementType": "geometry.fill",
-      "stylers": [
-        { "hue": "#aaff00" },
-        { "color": "#ffffff" },
-        { "weight": 3 }
-      ]
-    },{
-      "featureType": "road.arterial",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        { "color": "#d2d2d0" },
-        { "weight": 2 }
-      ]
-    },{
-      "featureType": "road.arterial",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        { "color": "#ffffff" }
-      ]
-    },{
-      "featureType": "road.arterial",
-      "elementType": "labels.text.stroke",
-      "stylers": [
-        { "color": "#bcbbba" },
-        { "weight": 1.9 }
-      ]
-    },{
+app.map.styles = [
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {"hue":    "#aaff00"},
+      {"color":  "#ffffff"},
+      {"weight": 3}
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {"color":  "#d2d2d0"},
+      {"weight": 2}
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {"color": "#ffffff"}
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {"color":  "#bcbbba"},
+      {"weight": 1.9}
+    ]
+  }
+];
+
+// Create Google Map
+app.map.createMap = function(){
+  var that        = this;
+  that.styledMap  = new google.maps.StyledMapType(that.styles, {name: "Styled Map"});
+  that.Map        = new google.maps.Map(document.getElementById(that.container), that.options);
+
+  that.Map.mapTypes.set('styled_map', that.styledMap);
+  that.Map.setMapTypeId('styled_map');
+
+  that.setMarker();
+}
+
+// Create a heat map layer
+app.map.createHeatMap = function(data){
+  var that        = this;
+  var crimes      = data;
+  var heatMapData = [];
+
+  for (x in crimes) {
+    if (crimes[x].threat_level == "2"){
+      heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
+    } else if (crimes[x].threat_level == "1"){
+      heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
     }
-  ];
+  }
 
-app.createMap = function(){
-  var self = this;
-  self.styledMap = new google.maps.StyledMapType(self.mapStyles,{name: "Styled Map"});
+  that.heatMap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
+  that.heatMap.setMap(that.Map);
 
-  self.map = new google.maps.Map(document.getElementById(self.mapContainer), self.mapOptions);
+  var gradient = [
+     'rgba(255, 235, 10, 0)',
+     'rgba(255, 235, 10, 1)',
+     'rgba(255, 222, 10, 1)',
+     'rgba(255, 177, 10, 1)',
+     'rgba(255, 141, 10, 1)',
+     'rgba(255, 96, 10, 1)',
+     'rgba(255, 55, 10, 1)',
+     'rgba(255, 39, 10, 1)'
+   ]
 
-  self.map.mapTypes.set('map_style', self.styledMap);
-  self.map.setMapTypeId('map_style');
-
-  self.setMarker();
+  that.heatMap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80});
 }
 
-app.setMarker = function() {
-  var self = this;
-  self.geolocationMarker = new google.maps.Marker({
-    position: self.google_location,
-    map: self.map,
-    title: 'Your geolocation',
-    icon: 'http://i.imgur.com/FOqzufV.png'
+// Get crime data
+app.crimes.getData = function(distance) {
+  var that = this;
+  var lat  = app.map.currentLocation.lat;
+  var lng  = app.map.currentLocation.lng;
+  var crimes;
+
+  $.getJSON('/crimes?distance='+distance+'&location='+lng+', '+lat, function(data) {
+    app.map.createHeatMap(data);
   });
 }
 
-app.createMap();
-
-$(document).ready(function(){
-  navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
-  app.searchLocationFormInit();
-  app.layersDropdownInit();
-});
-
-app.layersDropdownInit = function(){
-  $('div.layers').click(function(event){
-      $('div.layers').toggleClass('open');
+// Set a location marker on new map
+app.map.setMarker = function() {
+  var that        = this;
+  that.geoMarker  = new google.maps.Marker({
+    position: that.googleLocation,
+    map:      that.Map,
+    title:    'Your geolocation',
+    icon:     'http://i.imgur.com/FOqzufV.png'
   });
 }
 
-app.searchLocationFormInit = function(){
-  $('div.search img').click(function(){
-    $('div.search').toggleClass('open');
-  });
-
-  $('form.location-search').on('submit', function(event){
-    event.preventDefault();
-    var data = $(this).serialize();
-    console.log('form sent');
-    $.getJSON('/geocoder?'+data, function(data){
-      var pos = data.pos.split(" ");
-      console.log('form returned');
-
-      app.google_location = new google.maps.LatLng(pos[1], pos[0]);
-      app.current_location.lat = pos[0];
-      app.current_location.lon = pos[1];
-
-      app.map.setCenter(app.google_location);
-      app.geolocationMarker.setPosition(app.google_location);
-
-      app.formClose();
-    }, function(error){
-      app.alertFlash(error.message);
-    });
-
-  });
+app.map.setLocation = function(lat, lng) {
+  var that = this;
+  that.googleLocation      = new google.maps.LatLng(lat,lng);
+  that.currentLocation.lat = lat;
+  that.currentLocation.lng = lng;
 }
 
-app.flash = function(message, type){
-  $('.flash').addClass(type).text(message);
-
-  window.setTimeout(function(){
-    $('.flash').removeClass(type);
-  }, 4000);
-
+app.map.updateLocation = function() {
+  var that = this;
+  that.Map.setCenter(that.googleLocation);
+  that.geoMarker.setPosition(that.googleLocation);
 }
 
-app.formOpen = function(){
-  $('div.search').addClass('open');
+app.map.initialize = function() {
+  var that = this;
+  that.createMap();
+  that.geo.getLocation();
+  app.crimes.getData(1);
 }
 
-app.formClose = function(){
-  $('div.search').removeClass('open');
+// Geolocation
+app.map.geo.getLocation = function() {
+  var that = this;
+  navigator.geolocation.requestCurrentPosition(that.showPosition, that.errorCallback, that.timeoutCallback, 5000);
 }
 
-app.timeoutCallback = function(){
-  app.formOpen();
-  app.flash("Enter your location!", "warning");
+app.map.geo.timeoutCallback = function(){
+  app.view.formOpen();
+  app.view.flash("Enter your location!", "warning");
 }
 
-app.showPosition = function(pos) {
-    app.getCrimes(5);
-    app.google_location = new google.maps.LatLng(pos.coords.latitude ,pos.coords.longitude);
-    app.current_location.lat = pos.coords.latitude;
-    app.current_location.lon = pos.coords.longitude;
+app.map.geo.showPosition = function(pos) {
+  var lat = pos.coords.latitude;
+  var lng = pos.coords.longitude;
 
-    app.map.setCenter(app.google_location);
-
-    app.geolocationMarker.setPosition(app.google_location);
+  app.map.setLocation(lat, lng);
+  app.map.updateLocation();
 }
 
-app.errorCallback = function(error){
+app.map.geo.errorCallback = function(error){
+
   if(error.PERMISSION_DENIED){
-    app.flash("Enable your Geo Location!", "alert");
+    app.view.flash("Enable your Geo Location!", "alert");
   } else if(error.POSITION_UNAVAILABLE){
-    app.flash("Enter a location!", "alert");
+    app.view.flash("Enter a location!", "alert");
   } else if(error.TIMEOUT){
-    app.flash("hmmm we timed out trying to find where you are hiding!", "alert");
+    app.view.flash("hmmm we timed out trying to find where you are hiding!", "alert");
   }
 }
 
+// Get geolocation from client
 navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, timeoutCB, timeoutThreshold){
   var successHandler = successCB;
-  var errorHandler = errorCB;
+  var errorHandler   = errorCB;
+  var timeout        = timeoutThreshold || 40000;
 
-  window.geolocationTimeoutHandler = function(){
-    timeoutCB();
-  }
+  window.geolocationTimeoutHandler = function(){timeoutCB();}
+  window['geolocationRequestTimeoutHandler'] = setTimeout('geolocationTimeoutHandler()', timeout);
 
   if (typeof(geolocationRequestTimeoutHandler) != 'undefined'){
-    clearTimeout(window['geolocationRequestTimeoutHandler']);//clear any previous timers
+    clearTimeout(window['geolocationRequestTimeoutHandler']);
   }
-
-  var timeout = timeoutThreshold || 40000;//60 seconds
-  window['geolocationRequestTimeoutHandler'] = setTimeout('geolocationTimeoutHandler()', timeout);//set timeout handler
 
   navigator.geolocation.watchPosition(
     function(position){
@@ -182,39 +199,64 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     },{enableHighAccuracy: true});
 };
 
-app.getCrimes = function(distance){
-  console.log(app.current_location);
-  console.log('Getting Crimes')
+// DOM Observers
+app.observer.dropDown = function(target, cssClass){
+  $(target).click(function(event){
+      $(target).toggleClass(cssClass);
+  });
+}
 
-  $.getJSON('/crimes?distance='+distance+'&location='+app.current_location.lon+', '+app.current_location.lat, function(data) {
-    var crimes =  data;
-    var heatMapData = [];
-    console.log('crimes received');
-    console.log(crimes)
+app.observer.searchFormToggle = function(target, cssClass) {
+  $(target).click(function(){
+    $(target).toggleClass(cssClass);
+  });
+}
+app.observer.searchLocationForm = function(target){
+  $(target).on('submit', function(event){
+    event.preventDefault();
+    var data = $(this).serialize();
 
-    for (x in crimes){
-      if (crimes[x].threat_level == "2"){
-        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
-      } else if (crimes[x].threat_level == "1"){
-        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
-      }
-    }
-    console.log(heatMapData);
+    $.getJSON('/geocoder?'+data, function(data){
+      var pos = data.pos.split(" ");
+      var lat = pos[1];
+      var lng = pos[0];
 
-    var heatmap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
-    heatmap.setMap(app.map);
-    var gradient = [
-       'rgba(255, 235, 10, 0)',
-       'rgba(255, 235, 10, 1)',
-       'rgba(255, 222, 10, 1)',
-       'rgba(255, 177, 10, 1)',
-       'rgba(255, 141, 10, 1)',
-       'rgba(255, 96, 10, 1)',
-       'rgba(255, 55, 10, 1)',
-       'rgba(255, 39, 10, 1)'
-     ]
+      app.map.setLocation(lat, lng)
+      app.map.updateLocation();
+      app.view.formClose();
 
-    heatmap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80 });
+    }, function(error){
+      app.view.alertFlash(error.message);
+    });
 
   });
 }
+
+// Initialize DOM listeners
+app.observer.initialize = function() {
+  var that = this;
+  that.dropDown('div.layers', 'open');
+  that.searchFormToggle('div.search img', 'open');
+  that.searchLocationForm('form.location-search');
+}
+
+app.view.flash = function(message, type){
+  $('.flash').addClass(type).text(message);
+
+  window.setTimeout(function(){
+    $('.flash').removeClass(type);
+  }, 4000);
+}
+
+app.view.formOpen = function(){
+  $('div.search').addClass('open');
+}
+
+app.view.formClose = function(){
+  $('div.search').removeClass('open');
+}
+
+// Start Application
+$(document).ready(function(){
+  app.initialize();
+});
