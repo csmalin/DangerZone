@@ -10,7 +10,7 @@ var styles = [
     "stylers": [
       { "hue": "#aaff00" },
       { "color": "#ffffff" },
-      { "weight": 8 }
+      { "weight": 3 }
     ]
   },{
     "featureType": "road.arterial",
@@ -41,6 +41,8 @@ var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
 var mapOptions = {
   zoom: 18,
   center: app.google_current_location,
+  disableDefaultUI: true,
+  zoomControl: true,
   mapTypeControlOptions: {
     mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
   }
