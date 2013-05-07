@@ -36,6 +36,8 @@ end
 group :test do
 	gem 'capybara'
 	gem 'shoulda-matchers'
+	gem "nyan-cat-formatter"
+	gem "guard-rspec"
 end
 
 # To use ActiveModel has_secure_password
