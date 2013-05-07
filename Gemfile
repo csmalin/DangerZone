@@ -8,6 +8,7 @@ gem 'whenever',:require => false
 gem 'pg'
 gem 'geocoder'
 gem 'soda-ruby'
+gem 'unicorn'
 
 # Gems used only for assets and not required
 # in production environments by default.
