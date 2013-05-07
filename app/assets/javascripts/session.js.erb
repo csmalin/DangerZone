@@ -172,16 +172,18 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
 
 app.getCrimes = function(distance){
   console.log(app.current_location);
+  console.log('Getting Crimes')
 
   $.getJSON('/crimes?distance='+distance+'&location='+app.current_location.lon+', '+app.current_location.lat, function(data) {
     var crimes =  data;
     var heatMapData = [];
+    console.log('crimes received');
     console.log(crimes)
 
     for (x in crimes){
-      if (crimes[x].safety_score == "2"){
+      if (crimes[x].threat_level == "2"){
         heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
-      } else if (crimes[x].safety_score == "1"){
+      } else if (crimes[x].threat_level == "1"){
         heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
       }
     }
