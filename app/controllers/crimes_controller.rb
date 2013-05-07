@@ -1,6 +1,6 @@
 class CrimesController < ApplicationController
 
-include ApplicationHelper
+  include ApplicationHelper
 
   def show
   end

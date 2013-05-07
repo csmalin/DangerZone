@@ -1,5 +1,5 @@
 class GeocoderController < ApplicationController
-include ApplicationHelper
+  include ApplicationHelper
 
 	def index
 		#need to add logic to see if location entered is not San Francisco or we don't have enough information from the form.
