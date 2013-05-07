@@ -18,10 +18,10 @@ include ApplicationHelper
   end
 
   def index
-    parsed_crime = {}
-    @crimes = Crime.near(params[:location], params[:distance].to_f)
+    #@crimes = Crime.near(params[:location], params[:distance].to_f)
+    @crimes = Crime.all()
 
-    @crimes.each_with_index {|crime, i| @crimes[i] = {latitude: crime.latitude, longitude: crime.longitude, safety_score: crime.safety_score}}
+    #@crimes.each_with_index {|crime, i| @crimes[i] = {latitude: crime.latitude, longitude: crime.longitude, safety_score: crime.safety_score}}
 
     @crimes.map!{|crime| crime.to_json}
     @crimes.map!{|crime| JSON.parse(crime)}
