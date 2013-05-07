@@ -1,7 +1,6 @@
 require 'soda/client'
 
 class Crime < ActiveRecord::Base
-
 	validates :incidntnum, :uniqueness => true
 	before_create :set_threat_level
   reverse_geocoded_by :latitude, :longitude
@@ -13,5 +12,4 @@ class Crime < ActiveRecord::Base
   	category = self.category
 		self.threat_level = CRIME_LIST[category]
   end
-
 end

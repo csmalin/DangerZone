@@ -34,7 +34,7 @@ group :test, :development do
 end
 
 group :test do
-
+gem 'capybara'
 end
 
 # To use ActiveModel has_secure_password
