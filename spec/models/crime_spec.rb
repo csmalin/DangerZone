@@ -1,7 +1,6 @@
 require "spec_helper"
 
-describe Crime do 
-	
+describe Crime do
 	before do
 	  @crime = Crime.create(:incidntnum   => 130243190,
 	          					 :category     => "ARSON",

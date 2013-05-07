@@ -39,6 +39,8 @@ group :test do
 	gem 'shoulda-matchers'
 	gem "nyan-cat-formatter"
 	gem "guard-rspec"
+  gem "simplecov", :require => false
+  gem "simplecov-rcov", :require => false
 end
 
 # To use ActiveModel has_secure_password
