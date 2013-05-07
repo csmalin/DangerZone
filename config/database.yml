@@ -45,6 +45,7 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: Dangerzone_production
+  username: user
+  database: app-dev
   pool: 5
 
