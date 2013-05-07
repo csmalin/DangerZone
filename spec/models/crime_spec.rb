@@ -32,8 +32,15 @@ describe Crime do
 	it { should respond_to(:longitude) }
 	it { should respond_to(:threat_level) }
 
-	describe "set_threat_level method" do
+	it { should validate_uniqueness_of(:incidntnum) }
+
+	describe "when threat level is saved" do
 		before { @crime.save }
 		its(:threat_level) { should eq(2) }
+	end
+
+	describe "when time is saved" do
+		before { @crime.save }
+		its(:time) { should be_between(0,1440) }
 	end
 end
