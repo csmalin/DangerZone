@@ -131,9 +131,9 @@ app.getCrimes = function(distance){
 
     for (x in crimes){
       if (crimes[x].safety_score == "2"){
-        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
       } else if (crimes[x].safety_score == "1"){
-        heatMapData.push(new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude));
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
       }
     }
     console.log(heatMapData);
@@ -142,5 +142,19 @@ app.getCrimes = function(distance){
     console.log(heatmap );
     console.log(map);
     heatmap.setMap(map);
+    var gradient = [
+       'rgba(255, 255, 80, 0)',
+       'rgba(255, 255, 60, 1)',
+       'rgba(200, 180, 25, 1)',
+       'rgba(136, 76, 10, 1)',
+       'rgba(63, 32, 0, 1)',
+       'rgba(63, 0, 91, 1)',
+       'rgba(127, 0, 63, 1)',
+       'rgba(191, 0, 31, 1)',
+       'rgba(255, 0, 0, 1)'
+     ]
+
+    heatmap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80 });
+
   });
 }
