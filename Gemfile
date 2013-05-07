@@ -8,6 +8,7 @@ gem 'whenever',:require => false
 gem 'pg'
 gem 'geocoder'
 gem 'soda-ruby'
+gem 'unicorn'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -34,7 +35,16 @@ group :test, :development do
 end
 
 group :test do
+<<<<<<< HEAD
 
+=======
+	gem 'capybara'
+	gem 'shoulda-matchers'
+	gem "nyan-cat-formatter"
+	gem "guard-rspec"
+  gem "simplecov", :require => false
+  gem "simplecov-rcov", :require => false
+>>>>>>> fd2e3a92c5528c589ab2c036426b950155ec8a96
 end
 
 # To use ActiveModel has_secure_password
