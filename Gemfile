@@ -4,7 +4,7 @@ gem 'rails', '3.2.12'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
-
+gem 'whenever',:require => false
 gem 'pg'
 gem 'geocoder'
 gem 'soda-ruby'
@@ -27,6 +27,14 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
+end
+
+group :test, :development do
+  gem "rspec-rails", "~> 2.0"
+end
+
+group :test do
+gem 'capybara'
 end
 
 # To use ActiveModel has_secure_password

@@ -1,10 +1,17 @@
-require 'csv'
-include ApplicationHelper
+desc 'Update the database with newer records'
+task :getNewRecords => :environment do
+	require 'open-uri'
+	open("#{Rails.root}/db/Map__Crime_Incidents_-_Previous_Three_Months.csv", 'wb') do |file|
+  	file << open('https://data.sfgov.org/api/views/gxxq-x39z/rows.csv?accessType=DOWNLOAD').read
+	end
+	
+	require 'csv'
+	include ApplicationHelper
 
-csv_text = File.read("#{Rails.root}/db/Map__Crime_Incidents_-_Previous_Three_Months.csv")
-csv = CSV.parse(csv_text, :headers => true)
+	csv_text = File.read("#{Rails.root}/db/Map__Crime_Incidents_-_Previous_Three_Months.csv")
+	csv = CSV.parse(csv_text, :headers => true)
 
-csv.each_with_index do |crime, index|
+	csv.each_with_index do |crime, index|
 	puts index
       Crime.create(:incidntnum => crime["IncidntNum"],
                    :category   => crime["Category"],
@@ -19,3 +26,5 @@ csv.each_with_index do |crime, index|
                    :longitude  => crime["Location"].split(', ')[1].gsub(/\)/, '')
                    )
 	end
+	puts "#{csv.length}"
+end
