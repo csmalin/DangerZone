@@ -75,14 +75,17 @@ app.searchLocationFormInit = function(){
   $('form.location-search').on('submit', function(event){
     event.preventDefault();
     var data = $(this).serialize();
-
+    console.log('form sent');
     $.getJSON('/geocoder?'+data, function(data){
       var pos = data.pos.split(" ");
+      console.log('form returned');
 
-      app.google_current_location = new google.maps.LatLng(pos[0], pos[1]);
-      app.current_location = {lat: pos[0], lon: pos[1]};
+      app.google_current_location = new google.maps.LatLng(pos[1], pos[0]);
+      app.current_location.lat = pos[0];
+      app.current_location.lon = pos[1];
 
-      map.center(app.current_location);
+      map.setCenter(app.google_current_location);
+      app.geolocation.setPosition(app.google_current_location);
 
       app.formClose();
     }, function(error){
