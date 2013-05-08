@@ -1,0 +1,255 @@
+var app = {};
+var map;
+
+app.google_current_location = new google.maps.LatLng(-122.437, 37.765);
+app.current_location = {lat: -122.437, lon: 37.765};
+var styles = [
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry.fill",
+    "stylers": [
+      { "hue": "#aaff00" },
+      { "color": "#ffffff" },
+      { "weight": 3 }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "color": "#d2d2d0" },
+      { "weight": 2 }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#ffffff" }
+    ]
+  },{
+    "featureType": "road.arterial",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#bcbbba" },
+      { "weight": 1.9 }
+    ]
+  },{
+  }
+]
+
+var styledMap = new google.maps.StyledMapType(styles,{name: "Styled Map"});
+
+var mapOptions = {
+  zoom: 18,
+  center: app.google_current_location,
+  disableDefaultUI: true,
+  zoomControl: true,
+  mapTypeControlOptions: {
+    mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+  }
+};
+var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+map.mapTypes.set('map_style', styledMap);
+map.setMapTypeId('map_style');
+
+
+app.geolocation = new google.maps.Marker({
+  position: app.google_current_location,
+  map: map,
+  title: 'Your geolocation',
+  icon: 'http://i.imgur.com/FOqzufV.png'
+});
+
+
+$(document).ready(function(){
+  navigator.geolocation.requestCurrentPosition(app.showPosition, app.errorCallback, app.timeoutCallback, 5000);
+  app.searchLocationFormInit();
+  app.layersDropdownInit();
+});
+
+app.layersDropdownInit = function(){
+  $('div.layers').click(function(event){
+      $('div.layers').toggleClass('open');
+  });
+}
+
+app.searchLocationFormInit = function(){
+  $('div.search img').click(function(){
+    $('div.search').toggleClass('open');
+  });
+
+  $('form.location-search').on('submit', function(event){
+    event.preventDefault();
+    var data = $(this).serialize();
+    console.log('form sent');
+    $.getJSON('/geocoder?'+data, function(data){
+      var pos = data.pos.split(" ");
+      console.log('form returned');
+
+      app.google_current_location = new google.maps.LatLng(pos[1], pos[0]);
+      app.current_location.lat = pos[0];
+      app.current_location.lon = pos[1];
+
+      map.setCenter(app.google_current_location);
+      app.geolocation.setPosition(app.google_current_location);
+
+      app.formClose();
+    }, function(error){
+      app.alertFlash(error.message);
+    });
+
+  });
+}
+
+app.flash = function(message, type){
+  $('.flash').addClass(type).text(message);
+
+  window.setTimeout(function(){
+    $('.flash').removeClass(type);
+  }, 4000);
+
+}
+
+app.formOpen = function(){
+  $('div.search').addClass('open');
+}
+
+app.formClose = function(){
+  $('div.search').removeClass('open');
+}
+
+app.timeoutCallback = function(){
+  app.formOpen();
+  app.flash("Enter your location!", "warning");
+}
+
+app.showPosition = function(pos) {
+    app.google_current_location = new google.maps.LatLng(pos.coords.latitude ,pos.coords.longitude);
+    var date = new Date();
+    app.getCrimes(1,date);  
+    app.current_location.lat = pos.coords.latitude;
+    app.current_location.lon = pos.coords.longitude;
+
+    map.setCenter(app.google_current_location);
+
+    app.geolocation.setPosition(app.google_current_location);
+}
+
+app.errorCallback = function(error){
+  if(error.PERMISSION_DENIED){
+    app.flash("Enable your Geo Location!", "alert");
+  } else if(error.POSITION_UNAVAILABLE){
+    app.flash("Enter a location!", "alert");
+  } else if(error.TIMEOUT){
+    app.flash("hmmm we timed out trying to find where you are hiding!", "alert");
+  }
+}
+
+navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, timeoutCB, timeoutThreshold){
+  var successHandler = successCB;
+  var errorHandler = errorCB;
+
+  window.geolocationTimeoutHandler = function(){
+    timeoutCB();
+  }
+
+  if (typeof(geolocationRequestTimeoutHandler) != 'undefined'){
+    clearTimeout(window['geolocationRequestTimeoutHandler']);//clear any previous timers
+  }
+
+  var timeout = timeoutThreshold || 40000;//60 seconds
+  window['geolocationRequestTimeoutHandler'] = setTimeout('geolocationTimeoutHandler()', timeout);//set timeout handler
+
+  navigator.geolocation.watchPosition(
+    function(position){
+      clearTimeout(window['geolocationRequestTimeoutHandler']);
+      successHandler(position);
+    },
+    function(error){
+      clearTimeout(window['geolocationRequestTimeoutHandler']);
+      errorHandler(error);
+    },{enableHighAccuracy: true});
+};
+
+app.getCrimes = function(distance,date){
+  console.log(app.current_location);
+  console.log('Getting Crimes')
+
+  $.getJSON('/crimes?distance='+distance+'&location='+app.current_location.lon+', '+app.current_location.lat, function(data) {
+    var crimes =  data;
+    var heatMapData = [];
+    console.log('crimes received');
+    console.log(crimes)
+    var safetyScore = getSafetyScore(date,crimes);
+    console.log("The safety score is "+ safetyScore);
+
+    for (x in crimes){
+      if (crimes[x].threat_level == "2"){
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
+      } else if (crimes[x].threat_level == "1"){
+        heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
+      }
+    }
+    console.log(heatMapData);
+
+    var heatmap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
+    console.log(heatmap );
+    console.log(map);
+    heatmap.setMap(map);
+    var gradient = [
+       'rgba(255, 235, 10, 0)',
+       'rgba(255, 235, 10, 1)',
+       'rgba(255, 222, 10, 1)',
+       'rgba(255, 177, 10, 1)',
+       'rgba(255, 141, 10, 1)',
+       'rgba(255, 96, 10, 1)',
+       'rgba(255, 55, 10, 1)',
+       'rgba(255, 39, 10, 1)'
+     ]
+
+    heatmap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80 });
+
+  });
+}
+function getSafetyScore(date,crimes){
+  var sum = 0;
+  var max_distance = 0.2;
+  var max_safety_score = 100;
+  var minutes = (date.getHours()*60) + date.getMinutes(); 
+  var weights = {"1":50, "2":100}
+
+  for (x in crimes){
+    debugger
+    var crime = crimes[x];
+    var distance = CalcDistanceBetween(app.current_location.lat,app.current_location.lon,crime.latitude,crime.longitude);
+   
+    if (distance < max_distance)
+    {
+      return max_safety_score;
+    } 
+    else if (minutes === crime.time ||(minutes <= crime.time + 60 && minutes >= crime.time - 60))
+    {
+      return max_safety_score;
+    } 
+    else 
+    {
+      sum += weights[String(crime.threat_level)];
+    }
+  }
+   return sum/crimes.length;
+}
+
+function CalcDistanceBetween(lat1, lon1, lat2, lon2) {
+var p1 = new google.maps.LatLng(lat1,lon1);
+var p2 = new google.maps.LatLng(lat2,lon2);
+alert(calcDistance(p1, p2));
+return calcDistance(p1,p2);
+}
+
+function calcDistance(p1, p2){
+return ((google.maps.geometry.spherical.computeDistanceBetween(p1, p2) /                              
+1000).toFixed(2)) *  0.621371;
+}    
+
+
+
