@@ -188,7 +188,7 @@ app.map.geo.timeoutCallback = function(){
   app.view.formOpen();
   app.view.flash("Enter your location!", "warning");
   app.map.updateLocation();
-  app.crimes.getData(0, 0.25, 0)
+  app.crimes.getData(0, 0.25, 0);
 }
 
 app.map.geo.errorCallback = function(error){
