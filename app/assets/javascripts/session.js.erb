@@ -77,12 +77,8 @@ app.map.createMap = function(){
 // Create a heat map layer
 app.map.createHeatMap = function(data){
   var that        = this;
-  var crimes      = app.crimes.data[0];
+  var crimes      = [].concat.apply([], app.crimes.data);
   var heatMapData = [];
-
-  console.log('data');
-  console.log(app.crimes.data);
-  console.log(crimes);
 
   for (x in crimes) {
     if (crimes[x].threat_level == 2){
@@ -94,6 +90,8 @@ app.map.createHeatMap = function(data){
   }
 
   console.log(heatMapData);
+
+  if (that.heatMap) {that.heatMap.setMap(null)}
 
   that.heatMap = new google.maps.visualization.HeatmapLayer({data: heatMapData});
   that.heatMap.setMap(app.map.Map);
@@ -116,17 +114,37 @@ app.map.createHeatMap = function(data){
 }
 
 // Get crime data
-app.crimes.getData = function(minDistance, maxDistance, successCB) {
-  var that = this;
-  var lat  = app.map.currentLocation.lat;
-  var lng  = app.map.currentLocation.lng;
-  var crimes;
+app.crimes.layers = [{ min: 0   ,max: 0.5 },
+                     { min: 0.5 ,max: 1   },
+                     { min: 1   ,max: 1.5 },
+                     { min: 1.5 ,max: 2   },
+                     { min: 2   ,max: 2.5 },
+                     { min: 2.5 ,max: 3   },
+                     { min: 3   ,max: 3.5 },
+                     { min: 3.5 ,max: 4   },
+                     { min: 4   ,max: 4.5 },
+                     { min: 4.5 ,max: 5   },
+                     { min: 5   ,max: 5.5 },
+                     { min: 5.5 ,max: 6   },
+                     { min: 6   ,max: 6.5 },
+                     { min: 6.5 ,max: 7   }];
+
+app.crimes.getData = function(minDistance, maxDistance, counter) {
+  var that   = this;
+  var lat    = app.map.currentLocation.lat;
+  var lng    = app.map.currentLocation.lng;
+  var layers  = that.layers;
 
   $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
     console.log('success data');
     console.log(data);
-    that.data.push(data);
-    successCB();
+
+    if (counter <= that.layers.length) {
+      that.getData(layers[counter].min, layers[counter].max, (counter+1));
+      that.data.push(data);
+      app.map.createHeatMap();
+    }
+
   });
 }
 
@@ -178,7 +196,7 @@ app.map.geo.showPosition = function(pos) {
 
   app.map.setLocation(lat, lng);
   app.map.updateLocation();
-  app.crimes.getData(0.25, 0.5, app.map.createHeatMap);
+  app.crimes.getData(0, 0.25, 0);
 
 }
 
