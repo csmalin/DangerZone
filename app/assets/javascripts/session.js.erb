@@ -8,34 +8,13 @@ app.observer    = {};
 app.view        = {};
 app.crimes      = {};
 
-// Data
-app.cache.crimeData = [];
-app.cache.googleData = new google.maps.MVCArray([]);
-
-//Initialize Application
-app.initialize = function() {
-  app.map.initialize();
-  app.observer.initialize();
-}
-
-app.map.initialize = function() {
-  var that = this;
-  that.createMap();
-  that.geo.getLocation();
-  that.layers.initialize();
-}
-
-app.observer.initialize = function() {
-  var that = this;
-  that.dropDown('div.layers', 'open');
-  that.searchFormToggle('div.search img', 'open');
-  that.searchLocationForm('form.location-search');
-}
-
-
-// Map Configurations
-app.map.container       = 'map';
+// Default cache values
+app.cache.crimeData       = [];
+app.cache.googleData      = new google.maps.MVCArray([]);
 app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
+
+// Default Map configs
+app.map.container       = 'map';
 app.map.currentLocation = {lat: -122.437, lng: 37.765};
 
 app.map.options = {
@@ -46,7 +25,7 @@ app.map.options = {
   mapTypeControlOptions: {
     mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'styled_map']
   }
-};
+}
 
 app.map.styles = [
   {
@@ -80,6 +59,30 @@ app.map.styles = [
   }
 ];
 
+
+//Initialize Application
+app.initialize = function() {
+  app.map.initialize();
+  app.observer.initialize();
+}
+
+//Initialize map
+app.map.initialize = function() {
+  var that = this;
+  that.createMap();
+  that.geo.getLocation();
+  that.layers.initialize();
+}
+
+//Initialize DOM listiners
+app.observer.initialize = function() {
+  var that = this;
+  that.dropDown('div.layers', 'open');
+  that.searchFormToggle('div.search img', 'open');
+  that.searchLocationForm('form.location-search');
+}
+
+//////////////////////////////////////////////////////////////// Map
 // Create google map
 app.map.createMap = function(){
   var that               = this;
@@ -98,10 +101,6 @@ app.map.updateData = function(data){
   var crimes = data;
   app.cache.crimeData.push(data);
 
-  console.log('update data');
-  console.log(app.cache.crimeData);
-  console.log(that.layers.heatMap);
-
   for (x in crimes) {
     if (crimes[x].threat_level == 2) {
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
@@ -109,7 +108,6 @@ app.map.updateData = function(data){
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
     }
   }
-  console.log(app.cache.googleData);
 }
 
 // Set a location marker on new map
@@ -137,12 +135,13 @@ app.map.updateLocation = function() {
   that.geoMarker.setPosition(app.cache.googleLocation);
 }
 
+// Map Layers
 app.map.layers.initialize = function() {
   app.map.layers.createHeatMap();
   //app.map.layers.createPointMap();
 }
 
-// Create a heat map layer
+// Heat map layer
 app.map.layers.createHeatMap = function(){
   var that        = this;
   console.log('heat map');
@@ -169,44 +168,7 @@ app.crimes.initialize = function() {
   app.map.createLayers();
 }
 
-// Get crime data
-app.crimes.range = [{ min: 0   ,max: 0.5 },
-                     { min: 0.5 ,max: 1   },
-                     { min: 1   ,max: 1.5 },
-                     { min: 1.5 ,max: 2   },
-                     { min: 2   ,max: 2.5 },
-                     { min: 2.5 ,max: 3   },
-                     { min: 3   ,max: 3.5 },
-                     { min: 3.5 ,max: 4   },
-                     { min: 4   ,max: 4.5 },
-                     { min: 4.5 ,max: 5   },
-                     { min: 5   ,max: 5.5 },
-                     { min: 5.5 ,max: 6   },
-                     { min: 6   ,max: 6.5 },
-                     { min: 6.5 ,max: 7   },
-                     { min: 7   ,max: 7.5 }];
-
-app.crimes.getData = function(minDistance, maxDistance, counter) {
-  var that    = this;
-  var lat     = app.map.currentLocation.lat;
-  var lng     = app.map.currentLocation.lng;
-
-  $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
-
-    console.log("data recieved");
-
-    console.log(counter);
-    console.log(that.range.length);
-
-    if (counter <= (that.range.length - 1)) {
-      that.getData(that.range[counter].min, that.range[counter].max, (counter+1));
-      app.map.updateData(data);
-    }
-
-  });
-}
-
-// Geolocation
+//////////////////////////////////////////////////////////////// Geolocation
 app.map.geo.getLocation = function() {
   var that = this;
   navigator.geolocation.requestCurrentPosition(that.successCallback, that.errorCallback, that.timeoutCallback, 5000);
@@ -267,19 +229,59 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     },{enableHighAccuracy: true});
 };
 
-// DOM Observers
+//////////////////////////////////////////////////////////////// Crime Data
+// Data radius chunks
+app.crimes.range = [{ min: 0   ,max: 0.5 },
+                     { min: 0.5 ,max: 1   },
+                     { min: 1   ,max: 1.5 },
+                     { min: 1.5 ,max: 2   },
+                     { min: 2   ,max: 2.5 },
+                     { min: 2.5 ,max: 3   },
+                     { min: 3   ,max: 3.5 },
+                     { min: 3.5 ,max: 4   },
+                     { min: 4   ,max: 4.5 },
+                     { min: 4.5 ,max: 5   },
+                     { min: 5   ,max: 5.5 },
+                     { min: 5.5 ,max: 6   },
+                     { min: 6   ,max: 6.5 },
+                     { min: 6.5 ,max: 7   },
+                     { min: 7   ,max: 7.5 }];
+
+// Get data from server
+app.crimes.getData = function(minDistance, maxDistance, counter) {
+  var that    = this;
+  var lat     = app.map.currentLocation.lat;
+  var lng     = app.map.currentLocation.lng;
+
+  $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
+
+    console.log("data recieved");
+
+    console.log(counter);
+    console.log(that.range.length);
+
+    if (counter <= (that.range.length - 1)) {
+      that.getData(that.range[counter].min, that.range[counter].max, (counter+1));
+      app.map.updateData(data);
+    }
+
+  });
+}
+
+//////////////////////////////////////////////////////////////// DOM Observers
+// Dropdown click handler
 app.observer.dropDown = function(target, cssClass){
   $(target).click(function(event){
       $(this).toggleClass(cssClass);
   });
 }
-
+// Search form click handler
 app.observer.searchFormToggle = function(target, cssClass) {
   $(target).click(function(){
     $(this).parent().toggleClass(cssClass);
   });
 }
-
+// Search from submit handler
 app.observer.searchLocationForm = function(target){
   $(target).on('submit', function(event){
     event.preventDefault();
@@ -301,6 +303,7 @@ app.observer.searchLocationForm = function(target){
   });
 }
 
+//////////////////////////////////////////////////////////////// Views
 app.view.flash = function(message, type){
   $('.flash').addClass(type).text(message);
 
