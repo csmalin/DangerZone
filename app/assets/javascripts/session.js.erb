@@ -86,6 +86,7 @@ app.map.createHeatMap = function(data){
 
   for (x in crimes) {
     if (crimes[x].threat_level == 2){
+      console.log(crimes[x].distance);
       heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
     } else if (crimes[x].threat_level == 1){
       heatMapData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
@@ -115,15 +116,15 @@ app.map.createHeatMap = function(data){
 }
 
 // Get crime data
-app.crimes.getData = function(distance, successCB) {
+app.crimes.getData = function(minDistance, maxDistance, successCB) {
   var that = this;
   var lat  = app.map.currentLocation.lat;
   var lng  = app.map.currentLocation.lng;
   var crimes;
-  console.log(app.map.currentLocation.lat);
-  console.log(app.map.currentLocation.lng);
 
-  $.getJSON('/crimes?distance='+distance+'&location='+lat+', '+lng, function(data) {
+  $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
+    console.log('success data');
+    console.log(data);
     that.data.push(data);
     successCB();
   });
@@ -177,7 +178,7 @@ app.map.geo.showPosition = function(pos) {
 
   app.map.setLocation(lat, lng);
   app.map.updateLocation();
-  app.crimes.getData(0.25, app.map.createHeatMap);
+  app.crimes.getData(0.25, 0.5, app.map.createHeatMap);
 
 }
 
