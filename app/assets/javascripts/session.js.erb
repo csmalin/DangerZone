@@ -114,7 +114,8 @@ app.map.createHeatMap = function(data){
 }
 
 // Get crime data
-app.crimes.layers = [{ min: 0   ,max: 0.5 },
+app.crimes.layers = [{ min: 0   ,max: 0.25 },
+                     { min: 0.25,max: 0.5 },
                      { min: 0.5 ,max: 1   },
                      { min: 1   ,max: 1.5 },
                      { min: 1.5 ,max: 2   },
@@ -148,9 +149,56 @@ app.crimes.getData = function(minDistance, maxDistance, counter) {
   });
 }
 
+app.crimes.getSafetyScore = function(date) {
+  var sum_distance_threat = 0;
+  var sum_time_threat =0;
+  var sum = 0;
+  var weights = {"1":50, "2":100};
+  var minutes = (date.getHours()*60) + date.getMinutes();
+  var crimes = app.crimes.data[0];
+  debugger
+  for (x in crimes) {
+    var crime = crimes[x];
+    var distance = app.map.geo.CalcDistanceBetween(app.map.currentLocation.lat,app.map.currentlocation.lng,parseFloat(crime.latitude),parseFloat(crime.longitude));
+    if(distance >=0 && distance <= 0.2){
+      var distance_threat_score = (-500*distance) + 100;
+      sum_distance_threat += distance_threat_score
+  }
+    
+    var timeDiff = minutes - crime.time;
+    if (timeDiff < 0 && timeDiff >= -60){
+      var time_threat_score = (1.66666666666*timeDiff) + 100;
+      sum_time_threat += time_threat_score;
+
+   }  else if (timeDiff >= 0  && timeDiff <= 60) {
+     var time_threat_score = (-1.66666666666*timeDiff) + 100;
+     sum_time_threat += time_threat_score;
+   } 
+  
+   if(weights[String(crime.threat_level)]){
+   sum += weights[String(crime.threat_level)];
+ }
+  }
+   return (sum_distance_threat+sum+sum_time_threat)/(crimes.length*3)
+}
+
+app.map.geo.CalcDistanceBetween = function(lat1,lon1,lat2,lon2){
+  var p1 = new google.maps.LatLng(lat1,lon1);
+  var p2 = new google.maps.LatLng(lat2,lon2);
+  console.log(this.calcDistance(p1,p2))
+  return this.calcDistance(p1,p2);
+}
+
+app.map.geo.calcDistance = function(p1,p2){
+  return ((google.maps.geometry.spherical.computeDistanceBetween(p1, p2)).toFixed(2))/1000 *  0.621371;  
+}
 // Set a location marker on new map
 app.map.setMarker = function() {
   var that        = this;
+  var date        = new Date();
+
+  app.crimes.getSafetyScore(date);
+
   that.geoMarker  = new google.maps.Marker({
     position: that.googleLocation,
     map:      that.Map,
@@ -175,6 +223,7 @@ app.map.updateLocation = function() {
 app.map.initialize = function() {
   var that = this;
   that.createMap();
+
   that.geo.getLocation();
 }
 
