@@ -72,18 +72,19 @@ app.map.createMap = function(){
 }
 
 // Get Safety Score
-app.map.getSafetyScore = function(date,crimes) {
+app.crimes.getSafetyScore = function(date) {
   var sum_distance_threat = 0;
   var sum_time_threat =0;
   var sum = 0;
   var weights = {"1":50, "2":100};
   var minutes = (date.getHours()*60) + date.getMinutes();
+  var crimes = app.crimes.data[0];
   for (x in crimes) {
     var crime = crimes[x];
-    var distance = app.map.geo.CalcDistanceBetween(37.765,-122.437,parseFloat(crime.latitude),parseFloat(crime.longitude));
+    var distance = app.map.geo.CalcDistanceBetween(app.map.currentLocation.lat,app.map.currentlocation.lng,parseFloat(crime.latitude),parseFloat(crime.longitude));
     if(distance >=0 && distance <= 0.2){
-    var distance_threat_score = (-500*distance) + 100;
-    sum_distance_threat += distance_threat_score
+      var distance_threat_score = (-500*distance) + 100;
+      sum_distance_threat += distance_threat_score
   }
     
     var timeDiff = minutes - crime.time;
@@ -95,12 +96,11 @@ app.map.getSafetyScore = function(date,crimes) {
      var time_threat_score = (-1.66666666666*timeDiff) + 100;
      sum_time_threat += time_threat_score;
    } 
-   debugger
+  
    if(weights[String(crime.threat_level)]){
    sum += weights[String(crime.threat_level)];
  }
   }
-  debugger
    return (sum_distance_threat+sum+sum_time_threat)/(crimes.length*3)
 }
 
@@ -144,7 +144,10 @@ app.map.createHeatMap = function(data){
 
   that.heatMap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80});
 }
-
+app.map.addLegend = function() {
+  this.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+  document.getElementById('legend'));
+}
 // Get crime data
 app.crimes.getData = function(distance,date) {
   var that = this;
@@ -155,7 +158,7 @@ app.crimes.getData = function(distance,date) {
 
   $.getJSON('/crimes?distance='+distance+'&location='+lat+', '+lng, function(data) {
     app.map.createHeatMap(data);
-    var safetyScore = app.map.getSafetyScore(date,data);
+    var safetyScore = app.crimes.getSafetyScore(date);
     alert(safetyScore);
   });
 }
@@ -189,6 +192,7 @@ app.map.initialize = function() {
   var that = this;
   var date = new Date();
   that.createMap();
+  that.addLegend();
   that.geo.getLocation();
   app.crimes.getData(1,date);
 }
