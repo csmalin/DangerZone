@@ -101,6 +101,7 @@ app.observer.initialize = function() {
   that.searchFormToggle('div.search img', 'open');
   that.searchLocationForm('form.location-search');
   that.layerToggle();
+  app.observer.updateLocation();
 }
 
 //////////////////////////////////////////////////////////////// Map
@@ -212,83 +213,139 @@ app.map.showLayers = function(){
   } else {that.layers.heatMap.setMap(null)}
 
   for(m in app.cache.markerData){
-    app.cache.markerData[m].setIcon('http://i.imgur.com/FoyytFo.png');
+    app.cache.markerData[m].setIcon('http://i.imgur.com/NiUEh6y.png');//1
     app.cache.markerData[m].setVisible(false);
 
     if(app.cache.showLayer['arson']){
-      if(app.cache.markerData[m].category == 'ARSON'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'ARSON'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/g1bWMVp.png');//2
+      }
     }
 
     if(app.cache.showLayer['assault']){
-      if(app.cache.markerData[m].category == 'ASSAULT'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'ASSAULT'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/fp6LumH.png');//3
+      }
     }
 
     if(app.cache.showLayer['burglary']){
-      if(app.cache.markerData[m].category == 'BURGLARY'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'BURGLARY'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/Uhiqbq5.png');//4
+      }
     }
 
     if(app.cache.showLayer['disorderly-conduct']){
-      if(app.cache.markerData[m].category == 'DISORDERLY CONDUCT'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'DISORDERLY CONDUCT'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/2pOTBUl.png');//5
+      }
     }
 
     if(app.cache.showLayer['drug-narcotic']){
-      if(app.cache.markerData[m].category == 'DRUG/NARCOTIC'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'DRUG/NARCOTIC'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/deh9k5i.png');//6
+      }
     }
 
     if(app.cache.showLayer['drunkenness']){
-      if(app.cache.markerData[m].category == 'DRUNKENNESS'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'DRUNKENNESS'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/cJZEvHB.png');//7
+      }
     }
 
     if(app.cache.showLayer['extortion']){
-      if(app.cache.markerData[m].category == 'EXTORTION'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'EXTORTION'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/RU1t0kx.png');////8
+      }
     }
 
     if(app.cache.showLayer['kidnapping']){
-      if(app.cache.markerData[m].category == 'KIDNAPPING'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'KIDNAPPING'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/GC7mJqp.png');////9
+      }
     }
 
     if(app.cache.showLayer['larceny-theft']){
-      if(app.cache.markerData[m].category == 'LARCENY/THEFT'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'LARCENY/THEFT'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/ZShLQYe.png');////10
+      }
     }
 
     if(app.cache.showLayer['other-offenses']){
-      if(app.cache.markerData[m].category == 'OTHER OFFENSES'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'OTHER OFFENSES'){
+        app.cache.markerData[m].setVisible(true);}
+        app.cache.markerData[m].setIcon('http://i.imgur.com/MBB9OV1.png');////11
     }
 
     if(app.cache.showLayer['prostitution']){
-      if(app.cache.markerData[m].category == 'PROSTITUTION'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'PROSTITUTION'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/1Nixyq5.png');////12
+      }
     }
 
     if(app.cache.showLayer['robbery']){
-      if(app.cache.markerData[m].category == 'ROBBERY'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'ROBBERY'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/fp6LumH.png');//13
+      }
     }
 
     if(app.cache.showLayer['sex-offenses']){
-      if(app.cache.markerData[m].category == 'SEX OFFENSES, FORCIBLE' || app.cache.markerData[m].category == 'SEX OFFENSES, NON FORCIBLE'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'SEX OFFENSES, FORCIBLE' || app.cache.markerData[m].category == 'SEX OFFENSES, NON FORCIBLE'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/qlMyckr.png');//14
+      }
     }
 
     if(app.cache.showLayer['suspicious-activity']){
-      if(app.cache.markerData[m].category == 'SUSPICIOUS OCC'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'SUSPICIOUS OCC'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/1xXnhSE.png');//15
+      }
     }
 
     if(app.cache.showLayer['trespass']){
-      if(app.cache.markerData[m].category == 'TRESPASS'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'TRESPASS'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/BociXKX.png');//16
+      }
     }
 
     if(app.cache.showLayer['vandalism']){
-      if(app.cache.markerData[m].category == 'VANDALISM'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'VANDALISM'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/tTjqZej.png');//17
+      }
     }
 
     if(app.cache.showLayer['vehicle-theft']){
-      if(app.cache.markerData[m].category == 'VEHICLE THEFT'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'VEHICLE THEFT'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/XVoccPj.png');//18
+      }
     }
 
     if(app.cache.showLayer['weapon-laws']){
-      if(app.cache.markerData[m].category == 'WEAPON LAWS'){app.cache.markerData[m].setVisible(true);}
+      if(app.cache.markerData[m].category == 'WEAPON LAWS'){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/DjA3GW5.png');//19
+      }
     }
 
     if(app.cache.showLayer['all-crimes']){
-      if (app.cache.markerData[m].threat_level > 0){app.cache.markerData[m].setVisible(true);}
+      if (app.cache.markerData[m].threat_level > 0){
+        app.cache.markerData[m].setVisible(true);
+        app.cache.markerData[m].setIcon('http://i.imgur.com/YYmI526.png');//20
+      }
     }
   }
 }
@@ -335,16 +392,16 @@ app.crimes.getSafetyScore = function(date,data) {
   var crimes = data;
   for (x in crimes) {
     var crime = crimes[x];
-    
+
     var distance = app.map.geo.CalcDistanceBetween(app.map.currentLocation.lat,app.map.currentLocation.lng,parseFloat(crime.latitude),parseFloat(crime.longitude));
-    
+
     if(distance >=0 && distance <= 0.2){
       //TODO add priorities
       var distance_threat_score = (-200*distance) + 100;
       sum_distance_threat += distance_threat_score;
       distance_count+=1;
     }
-    
+
     var timeDiff = minutes - crime.time;
     console.log("Minutes is:"+minutes)
     console.log("Crime time is:" + crime.time)
@@ -360,7 +417,7 @@ app.crimes.getSafetyScore = function(date,data) {
      var time_threat_score = (-1.66666666666*timeDiff) + 100;
      sum_time_threat += time_threat_score;
      time_count += 1;
-   } 
+   }
 
    if(weights[String(crime.threat_level)]){
     sum_priority_threat += weights[String(crime.threat_level)];
@@ -397,7 +454,7 @@ app.map.geo.CalcDistanceBetween = function(lat1,lon1,lat2,lon2){
 }
 
 app.map.geo.calcDistance = function(p1,p2){
-  return ((google.maps.geometry.spherical.computeDistanceBetween(p1, p2)).toFixed(2))/1000 *  0.621371;  
+  return ((google.maps.geometry.spherical.computeDistanceBetween(p1, p2)).toFixed(2))/1000 *  0.621371;
 }
 // Set a location marker on new map
 app.map.setMarker = function(url) {
@@ -437,7 +494,7 @@ app.map.updateLocation = function() {
   $.getJSON('/crimes?max_distance='+0.50+'&min_distance='+0+'&location='+lat+', '+lng, function(data) {
      var crimes = data;
      var safety_score = app.crimes.getSafetyScore(date,crimes);
-     
+
 
       if(safety_score <= 10 && safety_score >= 0) {//dog
         app.map.geoMarker.setIcon('http://i.imgur.com/5BydPNx.jpg')
@@ -447,7 +504,7 @@ app.map.updateLocation = function() {
         app.map.geoMarker.setIcon('http://i.imgur.com/k6vIygX.jpg') //cat
     }
   });
- } 
+ }
 
 
 // Map Layers
@@ -475,7 +532,7 @@ app.map.layers.createHeatMap = function(){
 }
 app.crimes.initialize = function() {
   app.map.updateLocation();
-  app.crimes.getData(0, 0.5, 0);
+  app.crimes.getData(0, 0.25, 0, app.map.currentLocation.lat, app.map.currentLocation.lng);
   app.map.createLayers();
 }
 
@@ -559,7 +616,7 @@ app.crimes.range = [{ min: 0   ,max: 0.5 },
                      { min: 7   ,max: 7.5 }];
 
 // Get data from server
-app.crimes.getData = function(minDistance, maxDistance, counter,lat,lng) {
+  app.crimes.getData = function(minDistance, maxDistance, counter,lat,lng) {
     var that    = this;
     console.log(counter);
     $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
@@ -567,27 +624,27 @@ app.crimes.getData = function(minDistance, maxDistance, counter,lat,lng) {
       var crimes = data;
 
       if (counter === 0) {
-        app.crimes.changeSafetyMarker(date,crimes)  
+        app.crimes.changeSafetyMarker(date,crimes)
       }
 
-  if (counter <= (that.range.length - 1)) {
-    that.getData(that.range[counter].min, that.range[counter].max, (counter+1),lat,lng);
-    app.map.updateData(data);
-  }
-});
+      if (counter <= (that.range.length - 1)) {
+        that.getData(that.range[counter].min, that.range[counter].max, (counter+1),lat,lng);
+        app.map.updateData(crimes);
+      }
+    });
   }
 
   app.crimes.changeSafetyMarker = function(date,crimes) {
-    
+
     var safety_score = app.crimes.getSafetyScore(date,crimes)
-    
+
     if(safety_score <= 10 && safety_score >= 0) {
         app.map.geoMarker.setIcon('http://i.imgur.com/5BydPNx.jpg')
     } else if (safety_score > 10 && safety_score <70) { //yellow
         app.map.geoMarker.setIcon('http://i.imgur.com/TNEw4gQ.jpg')
     } else {
         app.map.geoMarker.setIcon('http://i.imgur.com/k6vIygX.jpg') //red
-    }   
+    }
   }
 
 
@@ -596,6 +653,12 @@ app.crimes.getData = function(minDistance, maxDistance, counter,lat,lng) {
 app.observer.dropDown = function(target, cssClass){
   $(target).click(function(event){
       $(this).toggleClass(cssClass);
+  });
+}
+app.observer.updateLocation = function(){
+  $('.current-location').click(function(){
+    console.log('clicked');
+    app.map.updateLocation();
   });
 }
 // Search form click handler
