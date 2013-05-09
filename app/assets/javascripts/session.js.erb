@@ -283,7 +283,7 @@ app.map.layers.createHeatMap = function(){
 }
 app.crimes.initialize = function() {
   app.map.updateLocation();
-  app.crimes.getData(0, 0.25, 0);
+  app.crimes.getData(0, 0.25, 0, app.map.currentLocation.lat, app.map.currentLocation.lng);
   app.map.createLayers();
 }
 
@@ -300,19 +300,19 @@ app.map.geo.successCallback = function(pos) {
 
   app.map.setLocation(lat, lng);
   app.map.updateLocation();
-  app.crimes.getData(0, 0.25, 0);
+  app.crimes.getData(0, 0.25, 0, app.map.currentLocation.lat, app.map.currentLocation.lng);
 }
 
 app.map.geo.timeoutCallback = function(){
   app.view.formOpen();
   app.view.flash("Enter your location!", "warning");
   app.map.updateLocation();
-  app.crimes.getData(0, 0.25, 0);
+  app.crimes.getData(0, 0.25, 0, app.map.currentLocation.lat, app.map.currentLocation.lng);
 }
 
 app.map.geo.errorCallback = function(error){
   app.map.updateLocation();
-  app.crimes.getData(0, 0.25, 0);
+  app.crimes.getData(0, 0.25, 0, app.map.currentLocation.lat, app.map.currentLocation.lng);
 
   if(error.PERMISSION_DENIED){
     app.view.flash("Enable your Geo Location!", "alert");
@@ -367,10 +367,8 @@ app.crimes.range = [{ min: 0   ,max: 0.5 },
                      { min: 7   ,max: 7.5 }];
 
 // Get data from server
-app.crimes.getData = function(minDistance, maxDistance, counter) {
+app.crimes.getData = function(minDistance, maxDistance, counter, lat, lng) {
   var that    = this;
-  var lat     = app.map.currentLocation.lat;
-  var lng     = app.map.currentLocation.lng;
 
   $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
 
@@ -380,7 +378,7 @@ app.crimes.getData = function(minDistance, maxDistance, counter) {
     console.log(that.range.length);
 
     if (counter <= (that.range.length - 1)) {
-      that.getData(that.range[counter].min, that.range[counter].max, (counter+1));
+      that.getData(that.range[counter].min, that.range[counter].max, (counter+1), lat, lng);
       app.map.updateData(data);
     }
 
