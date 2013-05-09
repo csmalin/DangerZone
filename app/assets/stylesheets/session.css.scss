@@ -13,6 +13,23 @@ body { height: 100%; margin: 0; padding: 0 }
   margin: 0;
   padding: 0;
 }
+.report{
+ position:fixed;
+  width: auto;
+  height: 20px;
+  width: 30px;
+  top: 3px;
+  left: 1190px;
+  
+  padding: 0;
+  text-align: center;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: white;
+  border: 1px solid #ccc;
+ 
+}
 .tweet {
   position: fixed;
   width: auto;
@@ -124,6 +141,8 @@ opacity: .9;
   background-color: rgb(181,202,136);
 }
 div.layers {
+  overflow: scroll;
+  max-height: 300px;
   position: fixed;
   width: 30px;
   height: 30px;
@@ -171,9 +190,6 @@ div.layers.open {
       -moz-transition: all 1s ease-in-out;
       transition: all 1s ease-in-out;
   }
-  li:first-child {
-    border-top: none;
-  }
   li:last-child {
     -webkit-border-radius: 0px 5px 0px 5px;
     -moz-border-radius: 0px 5px 0px 5px;
@@ -195,6 +211,15 @@ div.layers.open {
     }
   }
   li.active {
+    background-color: white;
+    text-decoration: none;
+    list-style-type: none;
+    padding: 10px 0px;
+    color: #666;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    width: 100%;
     background-color: rgb(244,244,244);
     box-shadow: 0px 0px 1px #ccc inset;
   }
