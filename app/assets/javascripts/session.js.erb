@@ -101,6 +101,7 @@ app.observer.initialize = function() {
   that.searchFormToggle('div.search img', 'open');
   that.searchLocationForm('form.location-search');
   that.layerToggle();
+  app.observer.updateLocation();
 }
 
 //////////////////////////////////////////////////////////////// Map
@@ -234,7 +235,7 @@ app.map.showLayers = function(){
     if(app.cache.showLayer['vandalism']){
       if(app.cache.markerData[m].category == 'VANDALISM'){
         app.cache.markerData[m].setVisible(true);
-        app.cache.markerData[m].setIcon('http://i.imgur.com/YYmI526.png');//17
+        app.cache.markerData[m].setIcon('http://i.imgur.com/tTjqZej.png');//17
       }
     }
 
@@ -255,7 +256,7 @@ app.map.showLayers = function(){
     if(app.cache.showLayer['all-crimes']){
       if (app.cache.markerData[m].threat_level > 0){
         app.cache.markerData[m].setVisible(true);
-        app.cache.markerData[m].setIcon('http://i.imgur.com/tTjqZej.png');//20
+        app.cache.markerData[m].setIcon('http://i.imgur.com/YYmI526.png');//20
       }
     }
   }
@@ -446,6 +447,12 @@ app.crimes.getData = function(minDistance, maxDistance, counter, lat, lng) {
 app.observer.dropDown = function(target, cssClass){
   $(target).click(function(event){
       $(this).toggleClass(cssClass);
+  });
+}
+app.observer.updateLocation = function(){
+  $('.current-location').click(function(){
+    console.log('clicked');
+    app.map.updateLocation();
   });
 }
 // Search form click handler
