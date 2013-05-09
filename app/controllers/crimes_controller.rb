@@ -17,6 +17,7 @@ class CrimesController < ApplicationController
                                                       category: crime.category,
                                                       time:crime.time}}
 
+
     respond_to do |format|
       format.json { render :json => @crimes }
     end

@@ -141,11 +141,14 @@ opacity: .9;
   background-color: rgb(181,202,136);
 }
 div.layers {
+<<<<<<< HEAD
   overflow: scroll;
+=======
+>>>>>>> 57aa205c85c2f65c86455a886a0604a372493ea1
   max-height: 300px;
   position: fixed;
-  width: 30px;
-  height: 30px;
+  width: 31px;
+  height: 31px;
   margin: 0;
   padding: 0;
   top: 90px;
@@ -170,6 +173,7 @@ div.layers {
   }
 }
 div.layers.open {
+  overflow: scroll;
   width: auto;
   height: auto;
   &:hover {
