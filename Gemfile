@@ -9,6 +9,7 @@ gem 'pg'
 gem 'geocoder'
 gem 'unicorn'
 
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -39,7 +40,7 @@ group :test do
 	gem "guard-rspec"
   gem "simplecov", :require => false
   gem "simplecov-rcov", :require => false
-
+  gem 'capybara'
 end
 
 # To use ActiveModel has_secure_password

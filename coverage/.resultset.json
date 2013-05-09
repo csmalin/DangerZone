@@ -1,88 +1,96 @@
 {
   "RSpec": {
     "coverage": {
-      "/home/csmalin/Desktop/DangerZone/app/controllers/application_controller.rb": [
+      "/Users/daddy/Desktop/DangerZone/app/controllers/application_controller.rb": [
         1,
         1,
         null
       ],
-      "/home/csmalin/Desktop/DangerZone/app/helpers/application_helper.rb": [
+      "/Users/daddy/Desktop/DangerZone/app/helpers/application_helper.rb": [
         1,
         null,
         null,
         1,
         null,
-        1,
-        null,
-        null,
-        null
-      ],
-      "/home/csmalin/Desktop/DangerZone/app/helpers/crimes_helper.rb": [
-        1,
-        null
-      ],
-      "/home/csmalin/Desktop/DangerZone/app/helpers/session_helper.rb": [
-        1,
-        null
-      ],
-      "/home/csmalin/Desktop/DangerZone/app/controllers/crimes_controller.rb": [
-        1,
-        null,
-        1,
-        null,
-        1,
-        null,
-        null,
-        1,
-        null,
-        0,
-        null,
-        null,
-        0,
-        0,
-        null,
-        0,
-        0,
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "/home/csmalin/Desktop/DangerZone/app/models/crime.rb": [
-        1,
-        1,
-        1,
-        1,
-        null,
-        1,
-        1,
-        null,
-        1,
-        15,
-        15,
-        null,
-        null
-      ],
-      "/home/csmalin/Desktop/DangerZone/app/controllers/geocoder_controller.rb": [
-        1,
-        1,
-        null,
-        1,
-        null,
-        0,
-        0,
-        0,
         0,
         null,
         null,
         null
       ],
-      "/home/csmalin/Desktop/DangerZone/app/controllers/session_controller.rb": [
+      "/Users/daddy/Desktop/DangerZone/app/helpers/crimes_helper.rb": [
+        1,
+        null
+      ],
+      "/Users/daddy/Desktop/DangerZone/app/helpers/session_helper.rb": [
+        1,
+        null
+      ],
+      "/Users/daddy/Desktop/DangerZone/app/controllers/crimes_controller.rb": [
         1,
         null,
         1,
         null,
+        1,
+        0,
+        null,
+        0,
+        null,
+        null,
+        1,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        0,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/Users/daddy/Desktop/DangerZone/app/models/crime.rb": [
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        1,
+        0,
+        0,
+        null,
+        null
+      ],
+      "/Users/daddy/Desktop/DangerZone/app/controllers/geocoder_controller.rb": [
+        1,
+        1,
+        null,
+        1,
+        null,
+        0,
+        0,
+        0,
+        null,
+        null,
+        null
+      ],
+      "/Users/daddy/Desktop/DangerZone/app/controllers/session_controller.rb": [
+        1,
+        1,
         null,
         null,
         1,
@@ -90,6 +98,6 @@
         null
       ]
     },
-    "timestamp": 1367969738
+    "timestamp": 1368136008
   }
 }
