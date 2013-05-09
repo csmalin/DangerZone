@@ -10,6 +10,8 @@ app.crimes      = {};
 
 // Default cache values
 app.cache.crimeData       = [];
+app.cache.showLayer       = {'arson': false, 'all-crimes': true}
+app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
 app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
 
@@ -80,6 +82,10 @@ app.observer.initialize = function() {
   that.dropDown('div.layers', 'open');
   that.searchFormToggle('div.search img', 'open');
   that.searchLocationForm('form.location-search');
+  // that.markerLayerToggle();
+  // that.heatMapLayerToggle();
+  // that.arsonLayerToggle();
+  that.layerToggle();
 }
 
 //////////////////////////////////////////////////////////////// Map
@@ -95,6 +101,73 @@ app.map.createMap = function(){
   that.setMarker();
 }
 
+app.map.showLayers = function(){
+  for(m in app.cache.markerData){
+    app.cache.markerData[m].setVisible(false);
+
+    if(app.cache.showLayer['arson']){
+      if(app.cache.markerData[m].category == 'ARSON'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['all-crimes']){
+      if (app.cache.markerData[m].threat_level > 0){app.cache.markerData[m].setVisible(true);}
+    }
+
+  }
+}
+
+// // Crime markers
+// app.map.setCrimeMarkers = function(){
+//   app.cache.markerDataShow = true;
+//   var that = this;
+//   for (m in app.cache.markerData){
+//     if (app.cache.markerData[m].threat_level > 0){
+//     app.cache.markerData[m].setVisible(true);
+//     }
+//   }
+// }
+
+// app.map.clearCrimeMarkers = function(){
+//   app.cache.markerDataShow = false;
+//   var that = this;
+//   for (m in app.cache.markerData){
+//     app.cache.markerData[m].setVisible(false);
+//   }
+// }
+
+// // Show Arson Crimes
+// app.map.setArsonMarkers = function(){
+//   app.cache.markerArson = true;
+//   for (m in app.cache.markerData){
+//     if (app.cache.markerData[m].category == "ARSON"){
+//       app.cache.markerData[m].setVisible(true);
+//     } else {
+//       app.cache.markerData[m].setVisible(false);
+//     }
+//   }
+// }
+
+// // Hide Arson Crimes
+// app.map.clearArsonMarkers = function(){
+//   app.cache.markerArson = false;
+//   for (m in app.cache.markerData){
+//     if (app.cache.markerData[m].category == "ARSON"){
+//       app.cache.markerData[m].setVisible(false);
+//     }
+//   }
+// }
+
+// Heat map
+app.map.showHeatMap = function(){
+  var that = this;
+  that.layers.heatMap.setMap(that.Map);
+}
+
+app.map.hideHeatMap = function(){
+  var that = this;
+  that.layers.heatMap.setMap(null);
+}
+
 // Updata map layers data points
 app.map.updateData = function(data){
   var that = this;
@@ -102,12 +175,27 @@ app.map.updateData = function(data){
   app.cache.crimeData.push(data);
 
   for (x in crimes) {
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude),
+      map: that.Map,
+      clickable: false,
+      threat_level: crimes[x].threat_level,
+      category: crimes[x].category
+    });
+
     if (crimes[x].threat_level == 2) {
+      marker.setIcon('http://i.imgur.com/FoyytFo.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
     } else if (crimes[x].threat_level == 1){
+      marker.setIcon('http://i.imgur.com/oevL0gi.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
+    } else {
+       marker.setIcon('http://i.imgur.com/oevL0gi.png');
+       marker.setVisible(false);
     }
+    app.cache.markerData.push(marker);
   }
+  app.map.showLayers();
 }
 
 // Set a location marker on new map
@@ -144,11 +232,8 @@ app.map.layers.initialize = function() {
 // Heat map layer
 app.map.layers.createHeatMap = function(){
   var that        = this;
-  console.log('heat map');
   that.heatMap    = new google.maps.visualization.HeatmapLayer({ data: app.cache.googleData });
-  console.log('heat map');
-  console.log(that.heatMap);
-  that.heatMap.setMap(app.map.Map);
+
   var gradient = [
      'rgba(255, 235, 10, 0)',
      'rgba(255, 235, 10, 1)',
@@ -162,7 +247,6 @@ app.map.layers.createHeatMap = function(){
   that.heatMap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80});
 }
 app.crimes.initialize = function() {
-  console.log("crimes initalized");
   app.map.updateLocation();
   app.crimes.getData(0, 0.25, 0);
   app.map.createLayers();
@@ -303,6 +387,63 @@ app.observer.searchLocationForm = function(target){
   });
 }
 
+// // All crime layer toggle
+// app.observer.markerLayerToggle = function(){
+//     $('#all-crimes').toggleClick(function(event){
+//       event.stopPropagation();
+//       $('li').removeClass('active');
+//       app.map.clearCrimeMarkers();
+//     },function(event){
+//       event.stopPropagation();
+//       $('li').removeClass('active');
+//       $(this).addClass('active');
+//       app.map.setCrimeMarkers();
+//     });
+// }
+
+// // Arson crime layer toggle
+// app.observer.arsonLayerToggle = function(){
+//   $('#arson').toggleClick(function(event){
+//     event.stopPropagation();
+//     $('#all-crimes').removeClass('active');
+//     app.map.clearCrimeMarkers();
+//     $(this).addClass('active');
+//     app.map.setArsonMarkers();
+//   }, function(event){
+//     event.stopPropagation();
+//     $(this).removeClass('active');
+//     app.map.clearArsonMarkers();
+//   });
+// }
+app.observer.layerToggle = function(){
+  $('li').click(function(event){
+    event.stopPropagation();
+    var elem = event.target;
+
+    if ($(elem).attr('class') == 'active'){
+      $(elem).removeClass('active');
+      app.cache.showLayer[$(elem).attr('id')] = false;
+    } else if($(elem).attr('class') != 'active') {
+      $(elem).addClass('active');
+      app.cache.showLayer[$(elem).attr('id')] = true;
+    }
+
+    app.map.showLayers();
+  });
+}
+// Heat map layer toggle
+app.observer.heatMapLayerToggle = function(){
+  $('#heat-map').toggleClick(function(event){
+    event.stopPropagation();
+    $(this).addClass('active');
+    app.map.showHeatMap();
+  }, function(event){
+    event.stopPropagation();
+    $(this).removeClass('active');
+    app.map.hideHeatMap();
+  });
+}
+
 //////////////////////////////////////////////////////////////// Views
 app.view.flash = function(message, type){
   $('.flash').addClass(type).text(message);
@@ -324,3 +465,14 @@ app.view.formClose = function(){
 $(document).ready(function(){
   app.initialize();
 });
+
+$.fn.toggleClick=function(){
+  var functions = arguments
+  return this.click(function(){
+    var iteration=$(this).data('iteration')||0
+  //  console.log(iteration)
+    functions[iteration].apply(this,arguments)
+    iteration= (iteration+1) %functions.length
+    $(this).data('iteration',iteration)
+  })
+}
