@@ -10,27 +10,6 @@ app.crimes      = {};
 
 // Default cache values
 app.cache.crimeData       = [];
-app.cache.showLayer       = {'all-crimes': true,
-                             'heat-map': false,
-                             'arson': false,
-                             'assault': false,
-                             'burglary': false,
-                             'disorderly-conduct': false,
-                             'drug-narcotic': false,
-                             'drunkenness': false,
-                             'extortion': false,
-                             'kidnapping': false,
-                             'larceny-theft': false,
-                             'other-offenses': false,
-                             'prostitution': false,
-                             'robbery': false,
-                             'sex-offenses': false,
-                             'suspicious-activity': false,
-                             'trespass': false,
-                             'vandalism': false,
-                             'vehical-theft': false,
-                             'weapon-laws': false};
-app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
 app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
 
@@ -89,6 +68,7 @@ app.initialize = function() {
 //Initialize map
 app.map.initialize = function() {
   var that = this;
+  console.log("In initialize")
   that.createMap();
   that.geo.getLocation();
   that.layers.initialize();
@@ -100,7 +80,6 @@ app.observer.initialize = function() {
   that.dropDown('div.layers', 'open');
   that.searchFormToggle('div.search img', 'open');
   that.searchLocationForm('form.location-search');
-  that.layerToggle();
 }
 
 //////////////////////////////////////////////////////////////// Map
@@ -112,6 +91,7 @@ app.map.createMap = function(){
 
   that.Map.mapTypes.set('styled_map', that.styledMap);
   that.Map.setMapTypeId('styled_map');
+  console.log("In create map")
   that.setMarker('http://i.imgur.com/FOqzufV.png');
 }
 
@@ -123,120 +103,16 @@ app.map.updateData = function(data){
   app.cache.crimeData.push(data);
 
   for (x in crimes) {
-     var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude),
-      map: that.Map,
-      clickable: false,
-      threat_level: crimes[x].threat_level,
-      category: crimes[x].category
-    });
-
     if (crimes[x].threat_level == 2) {
-      marker.setIcon('http://i.imgur.com/FoyytFo.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
     } else if (crimes[x].threat_level == 1){
-      marker.setIcon('http://i.imgur.com/oevL0gi.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
-    } else {
-       marker.setIcon('http://i.imgur.com/oevL0gi.png');
-       marker.setVisible(false);
-    }
-    app.cache.markerData.push(marker)
-  }
-  app.map.showLayers();
-}
-
-// Filter crime point layer visibility on map
-app.map.showLayers = function(){
-  var that = this;
-  if(app.cache.showLayer['heat-map']){
-    that.layers.heatMap.setMap(that.Map);
-  } else {that.layers.heatMap.setMap(null)}
-
-  for(m in app.cache.markerData){
-    app.cache.markerData[m].setVisible(false);
-
-    if(app.cache.showLayer['arson']){
-      if(app.cache.markerData[m].category == 'ARSON'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['assault']){
-      if(app.cache.markerData[m].category == 'ASSAULT'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['burglary']){
-      if(app.cache.markerData[m].category == 'BURGLARY'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['disorderly-conduct']){
-      if(app.cache.markerData[m].category == 'DISORDERLY CONDUCT'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['drug-narcotic']){
-      if(app.cache.markerData[m].category == 'DRUG/NARCOTIC'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['drunkenness']){
-      if(app.cache.markerData[m].category == 'DRUNKENNESS'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['extortion']){
-      if(app.cache.markerData[m].category == 'EXTORTION'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['kidnapping']){
-      if(app.cache.markerData[m].category == 'KIDNAPPING'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['larceny-theft']){
-      if(app.cache.markerData[m].category == 'LARCENY/THEFT'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['other-offenses']){
-      if(app.cache.markerData[m].category == 'OTHER OFFENSES'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['prostitution']){
-      if(app.cache.markerData[m].category == 'PROSTITUTION'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['robbery']){
-      if(app.cache.markerData[m].category == 'ROBBERY'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['sex-offenses']){
-      if(app.cache.markerData[m].category == 'SEX OFFENSES, FORCIBLE' || app.cache.markerData[m].category == 'SEX OFFENSES, NON FORCIBLE'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['suspicious-activity']){
-      if(app.cache.markerData[m].category == 'SUSPICIOUS OCC'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['trespass']){
-      if(app.cache.markerData[m].category == 'TRESPASS'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['vandalism']){
-      if(app.cache.markerData[m].category == 'VANDALISM'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['vehical-theft']){
-      if(app.cache.markerData[m].category == 'VEHICLE THEFT'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['weapon-laws']){
-      if(app.cache.markerData[m].category == 'WEAPON LAWS'){app.cache.markerData[m].setVisible(true);}
-    }
-
-    if(app.cache.showLayer['all-crimes']){
-      if (app.cache.markerData[m].threat_level > 0){app.cache.markerData[m].setVisible(true);}
     }
   }
 }
 
 
 app.crimes.getSafetyScore = function(date,data) {
-  console.log("GetSafeScore Called");
   var sum_distance_threat = 0;
   var sum_time_threat =0;
   var sum_priority_threat = 0;
@@ -305,6 +181,7 @@ app.map.geo.calcDistance = function(p1,p2){
 // Set a location marker on new map
 app.map.setMarker = function(url) {
   var that        = this;
+  console.log("In set marker")
   that.geoMarker  = new google.maps.Marker({
     position: app.cache.googleLocation,
     map:      that.Map,
@@ -322,6 +199,7 @@ app.map.setMarker = function(url) {
 
 app.map.setLocation = function(lat, lng) {
   var that = this;
+  console.log("In setLocation")
   app.cache.googleLocation = new google.maps.LatLng(lat,lng);
   that.currentLocation.lat = lat;
   that.currentLocation.lng = lng;
@@ -344,12 +222,12 @@ app.map.updateLocation = function() {
     var safety_score = app.crimes.getSafetyScore(date,crimes)
     if (maxDistance === 0.50 && minDistance === 0) {
       var safety_score = app.crimes.getSafetyScore(date,crimes)
-      if(safety_score <= 10 && safety_score >= 0) {//dog
+      if(safety_score <= 10 && safety_score >= 0) {
         app.map.setMarker('http://i.imgur.com/5BydPNx.jpg')
-    } else if (safety_score > 10 && safety_score <=46) { //rat
-      app.map.setMarker('http://i.imgur.com/TNEw4gQ.jpg')
+    } else if (safety_score > 10 && safety_score <=30) { //yellow
+      app.map.setMarker('http://i.imgur.com/5BydPNx.jpg')
     } else {
-      app.map.setMarker('http://i.imgur.com/k6vIygX.jpg') //cat
+      app.map.setMarker('http://i.imgur.com/k6vIygX.jpg') //red
     }
   }
 });
@@ -364,7 +242,11 @@ app.map.layers.initialize = function() {
 // Heat map layer
 app.map.layers.createHeatMap = function(){
   var that        = this;
+  console.log('heat map');
   that.heatMap    = new google.maps.visualization.HeatmapLayer({ data: app.cache.googleData });
+  console.log('heat map');
+  console.log(that.heatMap);
+  that.heatMap.setMap(app.map.Map);
   var gradient = [
   'rgba(255, 235, 10, 0)',
   'rgba(255, 235, 10, 1)',
@@ -378,6 +260,7 @@ app.map.layers.createHeatMap = function(){
   that.heatMap.setOptions({gradient: gradient, radius: 15, opacity: 0.9, maxIntensity: 80});
 }
 app.crimes.initialize = function() {
+  console.log("crimes initalized");
   app.map.updateLocation();
   app.crimes.getData(0, 0.5, 0);
   app.map.createLayers();
@@ -403,7 +286,7 @@ app.map.geo.timeoutCallback = function(){
   app.view.formOpen();
   app.view.flash("Enter your location!", "warning");
   app.map.updateLocation();
-  app.crimes.getData(0, 0.5, 0);
+  app.crimes.getData(0, 0.5, 0)
 }
 
 app.map.geo.errorCallback = function(error){
@@ -444,22 +327,6 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     },{enableHighAccuracy: true});
 };
 
-app.observer.layerToggle = function(){
-  $('li').click(function(event){
-    event.stopPropagation();
-    var elem = event.target;
-
-    if ($(elem).attr('class') == 'active'){
-      $(elem).removeClass('active');
-      app.cache.showLayer[$(elem).attr('id')] = false;
-    } else if($(elem).attr('class') != 'active') {
-      $(elem).addClass('active');
-      app.cache.showLayer[$(elem).attr('id')] = true;
-    }
-
-    app.map.showLayers();
-  });
-}
 //////////////////////////////////////////////////////////////// Crime Data
 // Data radius chunks
 app.crimes.range = [{ min: 0   ,max: 0.50 },
@@ -486,18 +353,24 @@ app.crimes.getData = function(minDistance, maxDistance, counter) {
     // var lat = 37.765;
     // var lng = -122.437;
     $.getJSON('/crimes?max_distance='+maxDistance+'&min_distance='+minDistance+'&location='+lat+', '+lng, function(data) {
+      console.log(maxDistance)
+      console.log(minDistance)
+      console.log("data recieved");
       var date = new Date();
+      console.log(date)
       var crimes = data;
       if (maxDistance === 0.50 && minDistance === 0) {
         var safety_score = app.crimes.getSafetyScore(date,crimes)
         if(safety_score <= 10 && safety_score >= 0) {
           app.map.setMarker('http://i.imgur.com/5BydPNx.jpg')
-    } else if (safety_score > 10 && safety_score <=46) { //yellow
-      app.map.setMarker('http://i.imgur.com/TNEw4gQ.jpg')
+    } else if (safety_score > 10 && safety_score <=30) { //yellow
+      app.map.setMarker('http://i.imgur.com/FOqzufV.png')
     } else {
       app.map.setMarker('http://i.imgur.com/k6vIygX.jpg') //red
     }
   }
+  console.log(app.map.geoMarker.icon);
+  console.log(counter);
 
   if (counter <= (that.range.length - 1)) {
     that.getData(that.range[counter].min, that.range[counter].max, (counter+1));
@@ -562,14 +435,3 @@ app.view.formClose = function(){
 $(document).ready(function(){
   app.initialize();
 });
-
-$.fn.toggleClick=function(){
-  var functions = arguments
-  return this.click(function(){
-    var iteration=$(this).data('iteration')||0
-  //  console.log(iteration)
-    functions[iteration].apply(this,arguments)
-    iteration= (iteration+1) %functions.length
-    $(this).data('iteration',iteration)
-  })
-}

@@ -19,3 +19,7 @@ csv.each_with_index do |crime, index|
                    :longitude  => crime["Location"].split(', ')[1].gsub(/\)/, '')
                    )
 	end
+
+open("http://search.twitter.com/search.json?q=SafeSF") {|f|
+    f.each_line {|line| p line[user_id]}
+  }

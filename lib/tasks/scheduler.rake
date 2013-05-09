@@ -28,3 +28,23 @@ task :getNewRecords => :environment do
 	end
 	puts "#{csv.length}"
 end
+
+task :getTweets =>:environment do 
+      require 'net/http'
+      require 'uri'
+      require 'rubygems'
+      require 'nokogiri'
+
+      def open(url)
+        Net::HTTP.get(URI.parse(url))
+      end
+
+      page_content = open('http://search.twitter.com/search.json?q=SafeSF')
+      parsed_page_content = JSON.parse(page_content)
+      results = parsed_page_content["results"]
+      id_array = []
+
+      for i in 0..results.length-1
+            id_array << results[i]["geo"]["coordinates"]
+      end
+end
