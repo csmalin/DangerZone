@@ -1,5 +1,5 @@
 html { height: 100% }
-body { height: 100%; margin: 0; padding: 0 }
+body { height: 100%; width: 100%; margin: 0; padding: 0 }
 #map { height: 100% }
 .search {
   background-color: white;
@@ -14,13 +14,10 @@ body { height: 100%; margin: 0; padding: 0 }
   padding: 0;
 }
 .report{
- position:fixed;
+  position:absolute;
   width: auto;
-  height: 20px;
-  width: 30px;
   top: 3px;
-  left: 1190px;
-  
+  right: 0;  
   padding: 0;
   text-align: center;
   -webkit-border-radius: 5px;
@@ -141,10 +138,6 @@ opacity: .9;
   background-color: rgb(181,202,136);
 }
 div.layers {
-<<<<<<< HEAD
-  overflow: scroll;
-=======
->>>>>>> 57aa205c85c2f65c86455a886a0604a372493ea1
   max-height: 300px;
   position: fixed;
   width: 31px;
