@@ -10,7 +10,26 @@ app.crimes      = {};
 
 // Default cache values
 app.cache.crimeData       = [];
-app.cache.showLayer       = {'arson': false, 'all-crimes': true, 'heat-map': false};
+app.cache.showLayer       = {'all-crimes': true,
+                             'heat-map': false,
+                             'arson': false,
+                             'assault': false,
+                             'burglary': false,
+                             'disorderly-conduct': false,
+                             'drug-narcotic': false,
+                             'drunkenness': false,
+                             'extortion': false,
+                             'kidnapping': false,
+                             'larceny-theft': false,
+                             'other-offenses': false,
+                             'prostitution': false,
+                             'robbery': false,
+                             'sex-offenses': false,
+                             'suspicious-activity': false,
+                             'trespass': false,
+                             'vandalism': false,
+                             'vehical-theft': false,
+                             'weapon-laws': false};
 app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
 app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
@@ -112,10 +131,77 @@ app.map.showLayers = function(){
       if(app.cache.markerData[m].category == 'ARSON'){app.cache.markerData[m].setVisible(true);}
     }
 
+    if(app.cache.showLayer['assault']){
+      if(app.cache.markerData[m].category == 'ASSAULT'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['burglary']){
+      if(app.cache.markerData[m].category == 'BURGLARY'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['disorderly-conduct']){
+      if(app.cache.markerData[m].category == 'DISORDERLY CONDUCT'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['drug-narcotic']){
+      if(app.cache.markerData[m].category == 'DRUG/NARCOTIC'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['drunkenness']){
+      if(app.cache.markerData[m].category == 'DRUNKENNESS'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['extortion']){
+      if(app.cache.markerData[m].category == 'EXTORTION'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['kidnapping']){
+      if(app.cache.markerData[m].category == 'KIDNAPPING'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['larceny-theft']){
+      if(app.cache.markerData[m].category == 'LARCENY/THEFT'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['other-offenses']){
+      if(app.cache.markerData[m].category == 'OTHER OFFENSES'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['prostitution']){
+      if(app.cache.markerData[m].category == 'PROSTITUTION'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['robbery']){
+      if(app.cache.markerData[m].category == 'ROBBERY'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['sex-offenses']){
+      if(app.cache.markerData[m].category == 'SEX OFFENSES, FORCIBLE' || app.cache.markerData[m].category == 'SEX OFFENSES, NON FORCIBLE'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['suspicious-activity']){
+      if(app.cache.markerData[m].category == 'SUSPICIOUS OCC'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['trespass']){
+      if(app.cache.markerData[m].category == 'TRESPASS'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['vandalism']){
+      if(app.cache.markerData[m].category == 'VANDALISM'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['vehical-theft']){
+      if(app.cache.markerData[m].category == 'VEHICLE THEFT'){app.cache.markerData[m].setVisible(true);}
+    }
+
+    if(app.cache.showLayer['weapon-laws']){
+      if(app.cache.markerData[m].category == 'WEAPON LAWS'){app.cache.markerData[m].setVisible(true);}
+    }
+
     if(app.cache.showLayer['all-crimes']){
       if (app.cache.markerData[m].threat_level > 0){app.cache.markerData[m].setVisible(true);}
     }
-
   }
 }
 
@@ -146,6 +232,7 @@ app.map.updateData = function(data){
     }
     app.cache.markerData.push(marker);
   }
+
   app.map.showLayers();
 }
 
