@@ -32,11 +32,11 @@ app.cache.showLayer       = {'all-crimes': true,
                              'weapon-laws': false};
 app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
-app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
+app.cache.googleLocation  = new google.maps.LatLng(37.765, -122.437);
 
 // Default Map configs
 app.map.container       = 'map';
-app.map.currentLocation = {lat: -122.437, lng: 37.765};
+app.map.currentLocation = {lat: 37.765, lng: -122.437};
 
 app.map.options = {
   zoom:             18,
@@ -79,7 +79,6 @@ app.map.styles = [
     ]
   }
 ];
-
 
 //Initialize Application
 app.initialize = function() {
@@ -125,6 +124,7 @@ app.map.showLayers = function(){
   } else {that.layers.heatMap.setMap(null)}
 
   for(m in app.cache.markerData){
+    app.cache.markerData[m].setIcon('http://i.imgur.com/FoyytFo.png');
     app.cache.markerData[m].setVisible(false);
 
     if(app.cache.showLayer['arson']){
@@ -221,13 +221,10 @@ app.map.updateData = function(data){
     });
 
     if (crimes[x].threat_level == 2) {
-      marker.setIcon('http://i.imgur.com/FoyytFo.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 3});
     } else if (crimes[x].threat_level == 1){
-      marker.setIcon('http://i.imgur.com/oevL0gi.png');
       app.cache.googleData.push({location: new google.maps.LatLng(crimes[x].latitude, crimes[x].longitude), weight: 1});
     } else {
-       marker.setIcon('http://i.imgur.com/oevL0gi.png');
        marker.setVisible(false);
     }
     app.cache.markerData.push(marker);
@@ -293,7 +290,7 @@ app.crimes.initialize = function() {
 //////////////////////////////////////////////////////////////// Geolocation
 app.map.geo.getLocation = function() {
   var that = this;
-  navigator.geolocation.requestCurrentPosition(that.successCallback, that.errorCallback, that.timeoutCallback, 5000);
+  navigator.geolocation.requestCurrentPosition(that.successCallback, that.errorCallback, that.timeoutCallback, 2000);
 }
 
 app.map.geo.successCallback = function(pos) {
@@ -340,7 +337,7 @@ navigator.geolocation.requestCurrentPosition = function(successCB, errorCB, time
     clearTimeout(window['geolocationRequestTimeoutHandler']);
   }
 
-  navigator.geolocation.watchPosition(
+  navigator.geolocation.getCurrentPosition(
     function(position){
       clearTimeout(window['geolocationRequestTimeoutHandler']);
       successHandler(position);
@@ -425,34 +422,6 @@ app.observer.searchLocationForm = function(target){
   });
 }
 
-// // All crime layer toggle
-// app.observer.markerLayerToggle = function(){
-//     $('#all-crimes').toggleClick(function(event){
-//       event.stopPropagation();
-//       $('li').removeClass('active');
-//       app.map.clearCrimeMarkers();
-//     },function(event){
-//       event.stopPropagation();
-//       $('li').removeClass('active');
-//       $(this).addClass('active');
-//       app.map.setCrimeMarkers();
-//     });
-// }
-
-// // Arson crime layer toggle
-// app.observer.arsonLayerToggle = function(){
-//   $('#arson').toggleClick(function(event){
-//     event.stopPropagation();
-//     $('#all-crimes').removeClass('active');
-//     app.map.clearCrimeMarkers();
-//     $(this).addClass('active');
-//     app.map.setArsonMarkers();
-//   }, function(event){
-//     event.stopPropagation();
-//     $(this).removeClass('active');
-//     app.map.clearArsonMarkers();
-//   });
-// }
 app.observer.layerToggle = function(){
   $('li').click(function(event){
     event.stopPropagation();
@@ -469,18 +438,6 @@ app.observer.layerToggle = function(){
     app.map.showLayers();
   });
 }
-// // Heat map layer toggle
-// app.observer.heatMapLayerToggle = function(){
-//   $('#heat-map').toggleClick(function(event){
-//     event.stopPropagation();
-//     $(this).addClass('active');
-//     app.map.showHeatMap();
-//   }, function(event){
-//     event.stopPropagation();
-//     $(this).removeClass('active');
-//     app.map.hideHeatMap();
-//   });
-// }
 
 //////////////////////////////////////////////////////////////// Views
 app.view.flash = function(message, type){
