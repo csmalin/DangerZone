@@ -10,7 +10,7 @@ app.crimes      = {};
 
 // Default cache values
 app.cache.crimeData       = [];
-app.cache.showLayer       = {'arson': false, 'all-crimes': true}
+app.cache.showLayer       = {'arson': false, 'all-crimes': true, 'heat-map': false};
 app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
 app.cache.googleLocation  = new google.maps.LatLng(-122.437, 37.765);
@@ -82,9 +82,6 @@ app.observer.initialize = function() {
   that.dropDown('div.layers', 'open');
   that.searchFormToggle('div.search img', 'open');
   that.searchLocationForm('form.location-search');
-  // that.markerLayerToggle();
-  // that.heatMapLayerToggle();
-  // that.arsonLayerToggle();
   that.layerToggle();
 }
 
@@ -101,7 +98,13 @@ app.map.createMap = function(){
   that.setMarker();
 }
 
+// Filter crime point layer visibility on map
 app.map.showLayers = function(){
+  var that = this;
+  if(app.cache.showLayer['heat-map']){
+    that.layers.heatMap.setMap(that.Map);
+  } else {that.layers.heatMap.setMap(null)}
+
   for(m in app.cache.markerData){
     app.cache.markerData[m].setVisible(false);
 
@@ -114,58 +117,6 @@ app.map.showLayers = function(){
     }
 
   }
-}
-
-// // Crime markers
-// app.map.setCrimeMarkers = function(){
-//   app.cache.markerDataShow = true;
-//   var that = this;
-//   for (m in app.cache.markerData){
-//     if (app.cache.markerData[m].threat_level > 0){
-//     app.cache.markerData[m].setVisible(true);
-//     }
-//   }
-// }
-
-// app.map.clearCrimeMarkers = function(){
-//   app.cache.markerDataShow = false;
-//   var that = this;
-//   for (m in app.cache.markerData){
-//     app.cache.markerData[m].setVisible(false);
-//   }
-// }
-
-// // Show Arson Crimes
-// app.map.setArsonMarkers = function(){
-//   app.cache.markerArson = true;
-//   for (m in app.cache.markerData){
-//     if (app.cache.markerData[m].category == "ARSON"){
-//       app.cache.markerData[m].setVisible(true);
-//     } else {
-//       app.cache.markerData[m].setVisible(false);
-//     }
-//   }
-// }
-
-// // Hide Arson Crimes
-// app.map.clearArsonMarkers = function(){
-//   app.cache.markerArson = false;
-//   for (m in app.cache.markerData){
-//     if (app.cache.markerData[m].category == "ARSON"){
-//       app.cache.markerData[m].setVisible(false);
-//     }
-//   }
-// }
-
-// Heat map
-app.map.showHeatMap = function(){
-  var that = this;
-  that.layers.heatMap.setMap(that.Map);
-}
-
-app.map.hideHeatMap = function(){
-  var that = this;
-  that.layers.heatMap.setMap(null);
 }
 
 // Updata map layers data points
@@ -431,18 +382,18 @@ app.observer.layerToggle = function(){
     app.map.showLayers();
   });
 }
-// Heat map layer toggle
-app.observer.heatMapLayerToggle = function(){
-  $('#heat-map').toggleClick(function(event){
-    event.stopPropagation();
-    $(this).addClass('active');
-    app.map.showHeatMap();
-  }, function(event){
-    event.stopPropagation();
-    $(this).removeClass('active');
-    app.map.hideHeatMap();
-  });
-}
+// // Heat map layer toggle
+// app.observer.heatMapLayerToggle = function(){
+//   $('#heat-map').toggleClick(function(event){
+//     event.stopPropagation();
+//     $(this).addClass('active');
+//     app.map.showHeatMap();
+//   }, function(event){
+//     event.stopPropagation();
+//     $(this).removeClass('active');
+//     app.map.hideHeatMap();
+//   });
+// }
 
 //////////////////////////////////////////////////////////////// Views
 app.view.flash = function(message, type){
