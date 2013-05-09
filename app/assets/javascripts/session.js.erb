@@ -28,7 +28,7 @@ app.cache.showLayer       = {'all-crimes': true,
                              'suspicious-activity': false,
                              'trespass': false,
                              'vandalism': false,
-                             'vehical-theft': false,
+                             'vehicle-theft': false,
                              'weapon-laws': false};
 app.cache.markerData      = [];
 app.cache.googleData      = new google.maps.MVCArray([]);
@@ -191,7 +191,7 @@ app.map.showLayers = function(){
       if(app.cache.markerData[m].category == 'VANDALISM'){app.cache.markerData[m].setVisible(true);}
     }
 
-    if(app.cache.showLayer['vehical-theft']){
+    if(app.cache.showLayer['vehicle-theft']){
       if(app.cache.markerData[m].category == 'VEHICLE THEFT'){app.cache.markerData[m].setVisible(true);}
     }
 
