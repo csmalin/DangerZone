@@ -17,7 +17,7 @@ body { height: 100%; width: 100%; margin: 0; padding: 0 }
   position:absolute;
   width: auto;
   top: 3px;
-  right: 0;  
+  right: 0;
   padding: 0;
   text-align: center;
   -webkit-border-radius: 5px;
@@ -25,9 +25,8 @@ body { height: 100%; width: 100%; margin: 0; padding: 0 }
   border-radius: 5px;
   background-color: white;
   border: 1px solid #ccc;
- 
 }
-.tweet {
+.current-location {
   position: fixed;
   width: auto;
   height: 30px;
@@ -42,10 +41,10 @@ body { height: 100%; width: 100%; margin: 0; padding: 0 }
   border-radius: 5px;
   background-color: white;
   border: 1px solid #ccc;
-  a img {
-    margin: 0 auto;
-    width: 30px;
-    height: 30px;
+  background: white url('http://i.imgur.com/dXDYjJw.png') no-repeat center center;
+  &:hover {
+    background-color: #ccc;
+    cursor: pointer;
   }
 }
 .search:hover, .tweet:hover {
