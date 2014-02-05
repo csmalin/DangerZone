@@ -11,5 +11,10 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require jquery_ujs
+//= require rangeslider/jquery-1.7.1.min
+//= require rangeslider/jquery-ui-1.8.16.custom.min
+
 //= require_tree .
+//= require rangeslider/jquery.mousewheel.min
+//= require rangeslider/jQRangeSlider-min
+
